@@ -1,7 +1,8 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
+    [Header("Player stat sheet")]
     [SerializeField] float speed = 5f;
 
     void Update()
