@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class FollowPlayer : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     public Transform target;
-    [SerializeField] Vector3 cameraOffset = new Vector3(0, 12, -8);
+    [SerializeField] Vector3 cameraOffset = new(0, 12, -8);
 
     private void Start()
     {
