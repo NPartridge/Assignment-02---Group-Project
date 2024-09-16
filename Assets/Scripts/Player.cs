@@ -18,8 +18,8 @@ public class Player : MonoBehaviour
 
     private void MovePlayer()
     {
-        float forwardInput = Input.GetAxis("Vertical");
-        float horizontalInput = Input.GetAxis("Horizontal");
+        float forwardInput = Input.GetAxisRaw("Vertical");
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
 
         Vector3 direction = new Vector3(horizontalInput, 0, forwardInput).normalized;
         Vector3 velocity = direction * speed;
