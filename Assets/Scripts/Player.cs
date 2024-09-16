@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
         Vector3 direction = new Vector3(horizontalInput, 0, forwardInput).normalized;
         Vector3 velocity = direction * speed;
 
-        transform.Translate(velocity * Time.deltaTime);
+        transform.Translate(velocity * Time.deltaTime, Space.World);
     }
 
     private void RotatePlayer()
