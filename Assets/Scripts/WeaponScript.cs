@@ -1,27 +1,48 @@
 using UnityEngine;
 
-// Code for timer from: https://docs.unity3d.com/ScriptReference/Time-time.html
-
 public class WeaponScript : MonoBehaviour
 {
-    [SerializeField] float fireRate = 0.5f;
-    private float nextFire = 0.0f;
-
+    private float nextFire;
     public GameObject bulletPrefab;
     
+    // This should be an empty prefab at the location where the projectiles for the weapon should be fired from
+    [SerializeField] private Transform weaponFiringPoint;
+    
+    private Player playerScript;
+    
+    [Header("Weapon stat sheet")]
+    [SerializeField] private float fireRate = 0.5f;
+
+    void Start()
+    {
+        //playerScript = GetComponent<Player>();
+        playerScript = GetComponentInParent<Player>();
+    }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
+        if (playerScript.AutoAimEnabled)
         {
-            nextFire = Time.time + fireRate;
-            Shoot();
+            // Auto-aim is enabled, fire automatically
+            if (Time.time > nextFire)
+            {
+                nextFire = Time.time + fireRate;
+                Shoot();
+            }
+        }
+        else
+        {
+            // Auto-aim is disabled here, only fire when the player clicks the mouse button
+            if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
+            {
+                nextFire = Time.time + fireRate;
+                Shoot();
+            }
         }
     }
 
     private void Shoot()
     {
-        Vector3 weaponOffset = new Vector3(0, 0.9f, 0);
-        Instantiate(bulletPrefab, transform.position + weaponOffset, transform.rotation);
+        Instantiate(bulletPrefab, weaponFiringPoint.position, weaponFiringPoint.rotation);
     }
 }
