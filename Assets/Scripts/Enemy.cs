@@ -14,12 +14,12 @@ public class Enemy : MonoBehaviour
     public float health = 100f;
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
-    
-    [Header("Attack Settings")]
     public float attackCooldown = 2f;
+    
+    
     private float lastAttackTime = -Mathf.Infinity;
-
-
+    private static readonly int IsMoving = Animator.StringToHash("isMoving");
+    private static readonly int Attack1 = Animator.StringToHash("Attack");
 
     void Start()
     {
@@ -57,7 +57,7 @@ public class Enemy : MonoBehaviour
 
             // Move forward in the direction the player is facing
             transform.position += transform.forward * (speed * Time.deltaTime);
-            animator.SetBool("isMoving", true);
+            animator.SetBool(IsMoving, true);
         }
         else
         {
@@ -68,17 +68,15 @@ public class Enemy : MonoBehaviour
     
     void Attack()
     {
-        // Check if enough time has passed since the last attack
+        // Check if enough time has passed since the last attack, we don't want the enemy to cast the attack animation repeatedly
         if (Time.time >= lastAttackTime + attackCooldown)
         {
             // Record the time of this attack
             lastAttackTime = Time.time;
 
-            // Trigger attack animation
-            animator.SetTrigger("Attack");
+            // Cast attack animation
+            animator.SetTrigger(Attack1);
         }
     }
-
-
 }
 

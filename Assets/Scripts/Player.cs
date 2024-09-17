@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             AutoAimEnabled = !AutoAimEnabled;
-            Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "Enabled" : "Disabled"));
+            Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "enabled" : "disabled"));
         }
     }
 
