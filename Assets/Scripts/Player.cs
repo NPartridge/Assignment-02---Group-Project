@@ -4,7 +4,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Player stat sheet")]
-    [SerializeField] float speed = 5f;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float rotationSpeed = 5f;
+    
+    public bool AutoAimEnabled { get; private set; }
 
     private void Start()
     {
@@ -13,8 +16,9 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        RotatePlayer();
         MovePlayer();
+        RotatePlayer();
+        CheckAutoAimToggle();
     }
 
     private void MovePlayer()
@@ -30,12 +34,78 @@ public class Player : MonoBehaviour
 
     private void RotatePlayer()
     {
+        if (AutoAimEnabled)
+        {
+            RotateTowardsNearestEnemy();
+        }
+        else
+        {
+            RotateTowardsMouse();
+        }
+    }
+
+    private void RotateTowardsNearestEnemy()
+    {
+        GameObject nearestEnemy = FindNearestEnemy();
+
+        if (nearestEnemy != null)
+        {
+            Vector3 enemyDirection = nearestEnemy.transform.position - transform.position;
+            enemyDirection.y = 0; // Keep only the horizontal direction
+            
+            // Calculate the rotation needed to face the enemy
+            Quaternion targetRotation = Quaternion.LookRotation(enemyDirection);
+
+            // Smoothly rotate towards the enemy
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
+    }
+
+    private void RotateTowardsMouse()
+    {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             // Only interested in position of mouse on x,z axes, keep player rotation on y axis
-            transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
+            Vector3 targetPoint = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+            Vector3 direction = targetPoint - transform.position;
+
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            }
         }
+    }
+
+    private void CheckAutoAimToggle()
+    {
+        // Allows the player to toggle auto-aim on/off when pressing 'R'. Halls of Torment has the same exact system
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            AutoAimEnabled = !AutoAimEnabled;
+            Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "Enabled" : "Disabled"));
+        }
+    }
+
+    private GameObject FindNearestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject nearestEnemy = null;
+        float minDistance = Mathf.Infinity; // https://docs.unity3d.com/ScriptReference/Mathf.Infinity.html
+        
+        // Go through all the enemies and find the closest one
+        foreach (GameObject enemy in enemies)
+        {
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                nearestEnemy = enemy;
+            }
+        }
+
+        return nearestEnemy;
     }
 }
