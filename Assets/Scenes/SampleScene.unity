@@ -568,11 +568,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57092fd3d0a69144ba9b7a6d59f10cba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 5599658250632308200, guid: 7274b60bd03f52946aa2dcd09d343f18, type: 3}
-  player: {fileID: 7900523940799283512, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
+  enemyPrefab: {fileID: 8791423355743301627, guid: 079db42af01a151418638623bd8e2d40, type: 3}
+  player: {fileID: 495578330}
   playerSpawnRadius: 25
-  maxEnemies: 5
-  spawnInterval: 0.1
+  maxEnemies: 4
+  spawnInterval: 3
 --- !u!4 &2054253158
 Transform:
   m_ObjectHideFlags: 0

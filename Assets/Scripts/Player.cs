@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
             // Calculate the rotation needed to face the enemy
             Quaternion targetRotation = Quaternion.LookRotation(enemyDirection);
 
-            // Smoothly rotate towards the enemy
+            // Rotates towards enemy
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
     }
@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             AutoAimEnabled = !AutoAimEnabled;
-            Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "Enabled" : "Disabled"));
+            Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "enabled" : "disabled"));
         }
     }
 
