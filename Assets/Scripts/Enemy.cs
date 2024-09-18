@@ -45,7 +45,6 @@ public class Enemy : MonoBehaviour
 
         if (distanceToPlayer > effectiveStopDistance)
         {
-            // Rotate towards the player
             Vector3 playerDirection = player.position - transform.position;
             playerDirection.y = 0; // Keep only the horizontal direction
 
@@ -53,7 +52,7 @@ public class Enemy : MonoBehaviour
             {
                 Quaternion targetRotation = Quaternion.LookRotation(playerDirection);
 
-                // Rotate towrads player
+                // Rotate towards player
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
             }
 
@@ -91,6 +90,7 @@ public class Enemy : MonoBehaviour
     void DamagePlayer(int amount)
     {
         playerScript.Health -= amount;
+        // Debug.Log("Enemy dealt " + amount + " damage!");
     }
 }
 

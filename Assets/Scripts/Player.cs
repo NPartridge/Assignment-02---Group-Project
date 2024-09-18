@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
         set
         {
             health = value;
-            Debug.Log("Current health:" + value);
+            Debug.Log("Current player health: " + value);
             if (health <= 0)
             {
                 Debug.Log("Player is dead!");
@@ -126,8 +126,5 @@ public class Player : MonoBehaviour
         }
 
         return nearestEnemy;
-    }
-
-    private void DamageEnemy() { 
     }
 }
