@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    private Player playerScript;
     public Transform player;
     private CapsuleCollider playerCollider;
-    private Rigidbody rb;
     private Animator animator;
     
     [Header("AI stat sheet")]
     [SerializeField] public float speed = 3f;
-    public float health = 100f;
+    [SerializeField] private int damageAmount = 5;
+    public int health = 100;
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
     public float attackCooldown = 2f;
@@ -26,6 +27,7 @@ public class Enemy : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerCollider = player.GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
+        playerScript = player.GetComponent<Player>();
     }
 
     void Update()
@@ -43,7 +45,6 @@ public class Enemy : MonoBehaviour
 
         if (distanceToPlayer > effectiveStopDistance)
         {
-            // Rotate towards the player
             Vector3 playerDirection = player.position - transform.position;
             playerDirection.y = 0; // Keep only the horizontal direction
 
@@ -51,7 +52,7 @@ public class Enemy : MonoBehaviour
             {
                 Quaternion targetRotation = Quaternion.LookRotation(playerDirection);
 
-                // Rotate towrads player
+                // Rotate towards player
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
             }
 
@@ -61,8 +62,12 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            // If enemy is close enough to player, attack!
-            Attack();
+            // Check if the player is alive before attacking
+            if (playerScript.Health > 0)
+            {
+                // If enemy is close enough to player, attack!
+                Attack();
+            }
         }
     }
     
@@ -76,7 +81,16 @@ public class Enemy : MonoBehaviour
 
             // Cast attack animation
             animator.SetTrigger(Attack1);
+
+            // damage the player
+            DamagePlayer(damageAmount);
         }
+    }
+
+    void DamagePlayer(int amount)
+    {
+        playerScript.Health -= amount;
+        // Debug.Log("Enemy dealt " + amount + " damage!");
     }
 }
 

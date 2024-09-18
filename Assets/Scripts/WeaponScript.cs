@@ -4,6 +4,8 @@ public class WeaponScript : MonoBehaviour
 {
     private float nextFire;
     public GameObject bulletPrefab;
+
+
     
     // This should be an empty prefab at the location where the projectiles for the weapon should be fired from
     [SerializeField] private Transform weaponFiringPoint;
@@ -12,6 +14,9 @@ public class WeaponScript : MonoBehaviour
     
     [Header("Weapon stat sheet")]
     [SerializeField] private float fireRate = 0.5f;
+    [SerializeField] private int weaponDamage;
+
+    public int WeaponDamage { get => weaponDamage; set => weaponDamage = value; }
 
     void Start()
     {

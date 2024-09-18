@@ -2528,6 +2528,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 7900523940799283512, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
   speed: 3
+  damageAmount: 5
   health: 100
   stopDistance: 1
   rotationSpeed: 5

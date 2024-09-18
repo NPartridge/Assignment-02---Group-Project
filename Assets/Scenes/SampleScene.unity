@@ -571,7 +571,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 8791423355743301627, guid: 079db42af01a151418638623bd8e2d40, type: 3}
   player: {fileID: 495578330}
   playerSpawnRadius: 25
-  maxEnemies: 4
+  maxEnemies: 1
   spawnInterval: 3
 --- !u!4 &2054253158
 Transform:
@@ -720,12 +720,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 585649857}
     - target: {fileID: 1501132416921209858, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
+      propertyPath: mHealth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1501132416921209858, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 963194227}
     - target: {fileID: 1501132416921209858, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
       propertyPath: rotationSpeed
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2332662707011094146, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -812,6 +816,10 @@ PrefabInstance:
       propertyPath: bulletPrefab
       value: 
       objectReference: {fileID: 8900516883622269909, guid: 8fd73df9eb39d3a4e833aa86eb165c39, type: 3}
+    - target: {fileID: 31682196684331286, guid: 1ee306f570500ae42ba9a8b81c1713f9, type: 3}
+      propertyPath: weaponDamage
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 31682196684331286, guid: 1ee306f570500ae42ba9a8b81c1713f9, type: 3}
       propertyPath: weaponFiringPoint
       value: 
