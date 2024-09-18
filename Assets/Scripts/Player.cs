@@ -6,8 +6,26 @@ public class Player : MonoBehaviour
     [Header("Player stat sheet")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
-    
+    [SerializeField] private int mHealth = 100;
+    public int health
+    {
+        get
+        {
+            return mHealth;
+        }
+        set
+        {
+            mHealth = value;
+            Debug.Log("Current health:" + value);
+            if (mHealth <= 0)
+            {
+                Debug.Log("Player is dead!");
+            }
+        }
+    }
+
     public bool AutoAimEnabled { get; private set; }
+ 
 
     private void Start()
     {

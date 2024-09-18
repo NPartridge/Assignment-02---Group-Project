@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    private Player playerScript;
     public Transform player;
     private CapsuleCollider playerCollider;
     private Rigidbody rb;
@@ -11,6 +12,7 @@ public class Enemy : MonoBehaviour
     
     [Header("AI stat sheet")]
     [SerializeField] public float speed = 3f;
+    [SerializeField] private int damageAmount = 5;
     public float health = 100f;
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
@@ -26,6 +28,7 @@ public class Enemy : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerCollider = player.GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
+        playerScript = player.GetComponent<Player>();
     }
 
     void Update()
@@ -61,8 +64,12 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            // If enemy is close enough to player, attack!
-            Attack();
+            // Check if the player is alive before attacking
+            if (playerScript.health > 0)
+            {
+                // If enemy is close enough to player, attack!
+                Attack();
+            }
         }
     }
     
@@ -76,7 +83,15 @@ public class Enemy : MonoBehaviour
 
             // Cast attack animation
             animator.SetTrigger(Attack1);
+
+            // damage the player
+            Damage(damageAmount);
         }
+    }
+
+    void Damage(int amount)
+    {
+        playerScript.health -= amount;
     }
 }
 
