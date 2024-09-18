@@ -6,18 +6,19 @@ public class Player : MonoBehaviour
     [Header("Player stat sheet")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
-    [SerializeField] private int mHealth = 100;
-    public int health
+    [SerializeField] private int health = 100;
+
+    public int Health
     {
         get
         {
-            return mHealth;
+            return health;
         }
         set
         {
-            mHealth = value;
+            health = value;
             Debug.Log("Current health:" + value);
-            if (mHealth <= 0)
+            if (health <= 0)
             {
                 Debug.Log("Player is dead!");
             }
@@ -125,5 +126,8 @@ public class Player : MonoBehaviour
         }
 
         return nearestEnemy;
+    }
+
+    private void DamageEnemy() { 
     }
 }

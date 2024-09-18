@@ -6,10 +6,12 @@ public class BulletScript : MonoBehaviour
     [SerializeField] float maxDistance = 20f;
 
     Vector3 startPosition;
-
+    int damage;
     void Start()
     {
         startPosition = transform.position;
+        // Get the damage of the weapon that the bullet was fired from
+        damage = GameObject.FindObjectOfType<WeaponScript>().WeaponDamage;
     }
 
     void Update()
@@ -35,8 +37,15 @@ public class BulletScript : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            // Destroy the enemy on hit
-            Destroy(other.gameObject);
+            //Damage the enemy
+            other.gameObject.GetComponent<Enemy>().health -= damage;
+
+            // Destroy the enemy if its health is 0 or below
+            if (other.gameObject.GetComponent<Enemy>().health <= 0)
+            {
+                Destroy(other.gameObject);
+            }
+ 
             // Destroy the bullet on hit
             Destroy(gameObject);
 

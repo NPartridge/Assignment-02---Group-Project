@@ -7,13 +7,12 @@ public class Enemy : MonoBehaviour
     private Player playerScript;
     public Transform player;
     private CapsuleCollider playerCollider;
-    private Rigidbody rb;
     private Animator animator;
     
     [Header("AI stat sheet")]
     [SerializeField] public float speed = 3f;
     [SerializeField] private int damageAmount = 5;
-    public float health = 100f;
+    public int health = 100;
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
     public float attackCooldown = 2f;
@@ -65,7 +64,7 @@ public class Enemy : MonoBehaviour
         else
         {
             // Check if the player is alive before attacking
-            if (playerScript.health > 0)
+            if (playerScript.Health > 0)
             {
                 // If enemy is close enough to player, attack!
                 Attack();
@@ -85,13 +84,13 @@ public class Enemy : MonoBehaviour
             animator.SetTrigger(Attack1);
 
             // damage the player
-            Damage(damageAmount);
+            DamagePlayer(damageAmount);
         }
     }
 
-    void Damage(int amount)
+    void DamagePlayer(int amount)
     {
-        playerScript.health -= amount;
+        playerScript.Health -= amount;
     }
 }
 
