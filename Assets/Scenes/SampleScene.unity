@@ -571,8 +571,8 @@ MonoBehaviour:
   enemyPrefab: {fileID: 8791423355743301627, guid: 079db42af01a151418638623bd8e2d40, type: 3}
   player: {fileID: 495578330}
   playerSpawnRadius: 25
-  maxEnemies: 1
-  spawnInterval: 3
+  maxEnemies: 4
+  spawnInterval: 1
 --- !u!4 &2054253158
 Transform:
   m_ObjectHideFlags: 0
@@ -728,8 +728,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 963194227}
     - target: {fileID: 1501132416921209858, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
+      propertyPath: pickupRadius
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1501132416921209858, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
       propertyPath: rotationSpeed
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2332662707011094146, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
       propertyPath: m_LocalPosition.y
