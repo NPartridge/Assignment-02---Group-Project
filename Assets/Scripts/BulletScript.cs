@@ -21,7 +21,7 @@ public class BulletScript : MonoBehaviour
 
     private void BulletMovement()
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(Vector3.forward * (speed * Time.deltaTime));
 
         // Destroy bullet when it goes beyond its max range
         Vector3 bulletDisplacement = transform.position - startPosition;
@@ -37,18 +37,16 @@ public class BulletScript : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            //Damage the enemy
-            other.gameObject.GetComponent<Enemy>().health -= damage;
+            // Get the enemy the bullet collided with
+            Enemy enemy = other.gameObject.GetComponent<Enemy>();
 
-            // Destroy the enemy if its health is 0 or below
-            if (other.gameObject.GetComponent<Enemy>().health <= 0)
+            if (enemy != null)
             {
-                Destroy(other.gameObject);
+                enemy.TakeDamage(damage); // Deal the damage
             }
- 
+
             // Destroy the bullet on hit
             Destroy(gameObject);
-
         }
     }
 }

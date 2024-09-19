@@ -2527,12 +2527,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 7900523940799283512, guid: 5579937f746510e44b4944c71d4f701c, type: 3}
-  speed: 3
-  damageAmount: 5
-  health: 100
   stopDistance: 1
   rotationSpeed: 5
-  attackCooldown: 2
+  speed: 3
+  damage: 5
+  health: 100
+  attackSpeed: 2
+  gemPrefab: {fileID: 3564743645360956725, guid: 5e94ec3ba0b726140afe335b2aee1f43, type: 3}
 --- !u!136 &733874419979213836
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2552,7 +2553,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.7
   m_Height: 2.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
