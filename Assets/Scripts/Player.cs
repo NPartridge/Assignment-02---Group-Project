@@ -119,6 +119,12 @@ public class Player : MonoBehaviour
         // Go through all the enemies and find the closest one
         foreach (GameObject enemy in enemies)
         {
+            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            
+            // We want to avoid targeting enemies that are dead
+            if (enemyScript == null || enemyScript.IsDead)
+                continue;
+            
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
             if (distance < minDistance)
             {
