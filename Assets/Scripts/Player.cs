@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private int health = 100;
+    public int experience = 0;
+    public float pickupRadius = 5f;
 
     public int Health
     {
@@ -127,4 +129,18 @@ public class Player : MonoBehaviour
 
         return nearestEnemy;
     }
+    
+    public void AddExperience(int amount)
+    {
+        experience += amount;
+        Debug.Log("Player received: " + amount + " experience. Total player experience: " + experience);
+    }
+    
+    void OnDrawGizmosSelected()
+    {
+        // A yellow sphere of the players pickup radius. The player needs to be selected in the editor for this to appear
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, pickupRadius);
+    }
+
 }

@@ -9,14 +9,16 @@ public class Enemy : MonoBehaviour
     private CapsuleCollider playerCollider;
     private Animator animator;
     
-    [Header("AI stat sheet")]
-    [SerializeField] public float speed = 3f;
-    [SerializeField] private int damageAmount = 5;
-    public int health = 100;
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
-    public float attackCooldown = 2f;
     
+    [Header("AI stat sheet")]
+    [SerializeField] public float speed = 3f;
+    [SerializeField] private int damage = 5;
+    public int health = 100;
+    public float attackSpeed = 2f;
+    
+    public GameObject gemPrefab; // The gem the enemy will drop on death
     
     private float lastAttackTime = -Mathf.Infinity;
     private static readonly int IsMoving = Animator.StringToHash("isMoving");
@@ -74,7 +76,7 @@ public class Enemy : MonoBehaviour
     void Attack()
     {
         // Check if enough time has passed since the last attack, we don't want the enemy to cast the attack animation repeatedly
-        if (Time.time >= lastAttackTime + attackCooldown)
+        if (Time.time >= lastAttackTime + attackSpeed)
         {
             // Record the time of this attack
             lastAttackTime = Time.time;
@@ -83,7 +85,7 @@ public class Enemy : MonoBehaviour
             animator.SetTrigger(Attack1);
 
             // damage the player
-            DamagePlayer(damageAmount);
+            DamagePlayer(damage);
         }
     }
 
@@ -92,5 +94,23 @@ public class Enemy : MonoBehaviour
         playerScript.Health -= amount;
         // Debug.Log("Enemy dealt " + amount + " damage!");
     }
+    
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0f)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        // Drop a gem when the enemy dies
+        Instantiate(gemPrefab, transform.position, Quaternion.identity);
+        
+        Destroy(gameObject);
+    }
+
 }
 
