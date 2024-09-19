@@ -8,7 +8,6 @@ public class Gem : MonoBehaviour
     public float moveSpeed = 10f;
     public int experiencePoints = 10;
     public float gemSpeedMultiplier = 2f; // Multiplier for gem movement speed when vacuum is activated
-    public float pickupRadius = 0f; // Used for the vacuum
 
     private bool isMovingToPlayer;
     private Transform playerTransform;
@@ -29,13 +28,13 @@ public class Gem : MonoBehaviour
         // Add some randomness to the gems bounce so they dont all bounce in sync
         if (gemType == GemType.Experience)
         {
-            bounceHeight += Random.Range(0.05f, 0.3f);
-            bounceSpeed += Random.Range(0.1f, 0.3f);
+            bounceHeight += Random.Range(-0.05f, 0.5f);
+            bounceSpeed += Random.Range(-0.2f, 0.3f);
         }
         else if (gemType == GemType.Vacuum)
         {
-            bounceHeight += Random.Range(0.05f, 0.2f);
-            bounceSpeed += Random.Range(0.2f, 0.3f);
+            bounceHeight += Random.Range(-0.05f, 0.1f);
+            bounceSpeed += Random.Range(-0.2f, 0.3f);
         }
         bounceOffset = Random.Range(0, 5);
 
@@ -62,15 +61,17 @@ public class Gem : MonoBehaviour
             // Check if the gem is within the pickup radius
             float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
 
-            if (gemType == GemType.Experience && distanceToPlayer <= playerScript.pickupRadius)
+            if (distanceToPlayer <= playerScript.pickupRadius)
             {
-                // If gem is within pickup radius, start moving the gem towards player
-                StartMovingGemToPlayer();
-            }
-            else if (gemType == GemType.Vacuum && distanceToPlayer <= pickupRadius)
-            {
-                // If gem is within pickup radius, start moving towards player
-                isMovingToPlayer = true;
+                if (gemType == GemType.Experience)
+                {
+                    // If gem is within pickup radius, start moving the gem towards player
+                    StartMovingGemToPlayer();
+                }
+                else if (gemType == GemType.Vacuum)
+                {
+                    isMovingToPlayer = true;
+                }
             }
         }
         else
