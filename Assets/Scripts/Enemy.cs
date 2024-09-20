@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     private Player playerScript;
     public Transform player;
     private CapsuleCollider playerCollider;
+    private CapsuleCollider enemyCollider;
     private Animator animator;
     
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
@@ -21,13 +22,16 @@ public class Enemy : MonoBehaviour
     public GameObject gemPrefab; // The gem the enemy will drop on death
     
     private float lastAttackTime = -Mathf.Infinity;
-    private static readonly int IsMoving = Animator.StringToHash("isMoving");
-    private static readonly int Attack1 = Animator.StringToHash("Attack");
+    private static readonly int IsEnemyMoving = Animator.StringToHash("isMoving");
+    private static readonly int AttackAnimationTrigger = Animator.StringToHash("Attack");
+    private static readonly int DeathAnimationTrigger = Animator.StringToHash("Die");
+    public bool IsDead { get; private set; }
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerCollider = player.GetComponent<CapsuleCollider>();
+        enemyCollider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
         playerScript = player.GetComponent<Player>();
     }
@@ -60,7 +64,7 @@ public class Enemy : MonoBehaviour
 
             // Move forward in the direction the player is facing
             transform.position += transform.forward * (speed * Time.deltaTime);
-            animator.SetBool(IsMoving, true);
+            animator.SetBool(IsEnemyMoving, true);
         }
         else
         {
@@ -82,7 +86,7 @@ public class Enemy : MonoBehaviour
             lastAttackTime = Time.time;
 
             // Cast attack animation
-            animator.SetTrigger(Attack1);
+            animator.SetTrigger(AttackAnimationTrigger);
 
             // damage the player
             DamagePlayer(damage);
@@ -97,6 +101,9 @@ public class Enemy : MonoBehaviour
     
     public void TakeDamage(int damage)
     {
+        if (IsDead)
+            return; // If the enemy is dead we don't need to deal damage
+
         health -= damage;
         if (health <= 0f)
         {
@@ -106,11 +113,25 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        // Drop a gem when the enemy dies
+        IsDead = true;
+        animator.SetTrigger(DeathAnimationTrigger);
+        
+        enabled = false; // Disables enemy movement/attack logic etc.
+
+        enemyCollider.enabled = false; // Disables the collider so the player can't shoot at dead enemies
+
+        // Wait until animation is done before destroying the enemy
+        StartCoroutine(WaitForDeathAnimation());
+    }
+
+    private IEnumerator WaitForDeathAnimation()
+    {
+        yield return new WaitForSeconds(3f);
+        
+        // Drop a gem when the enemy dies. Move this line before WaitForSeconds() if we want the gems to spawn as soon as the enemy dies
         Instantiate(gemPrefab, transform.position, Quaternion.identity);
         
         Destroy(gameObject);
     }
-
 }
 
