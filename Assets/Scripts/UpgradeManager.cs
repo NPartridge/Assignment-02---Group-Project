@@ -20,7 +20,8 @@ public class UpgradeManager : MonoBehaviour
         PickupRadius,
         CritChance,
         CritDamage,
-        AttackSpeed
+        AttackSpeed,
+        Damage
     }
 
     private void Start()
@@ -102,7 +103,7 @@ public class UpgradeManager : MonoBehaviour
             case UpgradeType.RotationSpeed:
                 return "Rotation speed";
             case UpgradeType.FlatHealth:
-                return "Flat health";
+                return "Health";
             case UpgradeType.PickupRadius:
                 return "Pickup radius";
             case UpgradeType.CritChance:
@@ -111,6 +112,8 @@ public class UpgradeManager : MonoBehaviour
                 return "CritDamage";
             case UpgradeType.AttackSpeed:
                 return "Attack Speed";
+            case UpgradeType.Damage:
+                return "Damage";
             default:
                 return "wat da catfish";
         }
@@ -139,14 +142,18 @@ public class UpgradeManager : MonoBehaviour
                 player.UpgradePickupRadius(0.5f);
                 break;
             case UpgradeType.CritChance:
-                player.UpgradeCritChance(5f);
+                player.UpgradeCritChance(0.4f);
                 break;
             case UpgradeType.CritDamage:
-                player.UpgradeCritDamage(0.1f);
+                player.UpgradeCritDamage(0.15f);
                 break;
             case UpgradeType.AttackSpeed:
-                player.UpgradeAttackSpeed();
+                player.UpgradeAttackSpeed(0.1f);
                 break;
+            case UpgradeType.Damage:
+                player.UpgradeDamage(8);
+                break;
+            
         }
 
         Debug.Log("Player upgraded their " + upgrade);

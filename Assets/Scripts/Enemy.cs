@@ -25,6 +25,9 @@ public class Enemy : MonoBehaviour
     private static readonly int IsEnemyMoving = Animator.StringToHash("isMoving");
     private static readonly int AttackAnimationTrigger = Animator.StringToHash("Attack");
     private static readonly int DeathAnimationTrigger = Animator.StringToHash("Die");
+    
+    [SerializeField] private GameObject damageNumberPrefab;
+    
     public bool IsDead { get; private set; }
 
     void Start()
@@ -105,11 +108,34 @@ public class Enemy : MonoBehaviour
             return; // If the enemy is dead we don't need to deal damage
 
         health -= damage;
+        ShowDamageNumber(damage);
+        
         if (health <= 0f)
         {
             Die();
         }
     }
+    
+    private void ShowDamageNumber(int damage)
+    {
+        // Raising the position slightly higher so the number starts somewhere around the enemies head
+        GameObject dmgNumber = Instantiate(damageNumberPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
+        
+        dmgNumber.transform.SetParent(transform);
+
+        // Set the amount of damgae
+        DamageNumber dmgNumberScript = dmgNumber.GetComponent<DamageNumber>();
+        if (dmgNumberScript != null)
+        {
+            dmgNumberScript.SetDamage(damage, false);
+        }
+        else
+        {
+            Debug.LogError("DMG number script not on prefab");
+        }
+    }
+
+
 
     void Die()
     {

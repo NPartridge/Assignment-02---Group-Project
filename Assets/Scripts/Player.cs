@@ -15,10 +15,18 @@ public class Player : MonoBehaviour
     public float pickupRadius = 5f;
     
     [SerializeField] private float critChance = 0f;
-    [SerializeField] private float critDamageMultiplier = 1.5f;
+    [SerializeField] private float critDamageMultiplier = 2f;
     
     [SerializeField] private float attackSpeed = 1f;
+    
+    [SerializeField] private int basePlayerDamage = 0;
+    private int flatPlayerDamageIncrease = 0;
 
+    // We need attack speed, crit chance, and crit multi in the weapon script
+    public float AttackSpeed => attackSpeed;
+    public float CritChance => critChance; 
+    public float CritDamageMultiplier => critDamageMultiplier;
+    
     [Header("Levelling System")]
     public int level = 1;
     public int experienceToNextLevel = 0;
@@ -52,7 +60,7 @@ public class Player : MonoBehaviour
         upgradeManager = FindObjectOfType<UpgradeManager>();
         if (upgradeManager == null)
         {
-            Debug.LogError("No ugprade manager in scene");
+            Debug.LogError("No upgrade manager in scene");
         }
         CurrentHealth = MaximumHealth; // Init current health to max HP on start
     }
@@ -166,9 +174,11 @@ public class Player : MonoBehaviour
     }
     
     // Currently levelling up is based on a quadratic formula (the change in the change of our y is constant)
+    // Below is the output for the current formula if the starting experience is 100
     // Base exp = 100 -> 400 -> 900 -> 1600 -> 2500 -> 3600 -> (This is the change in our y, NOT CONSTANT)
     // Differences =  300 -> 500 -> 700 -> 900 -> 1100 -> (This is the change in the change of our y, IS CONSTANT)
-    // We probably do not want a linear or exponential system for this game
+    // We probably do not want a linear or exponential system for this game because the player should be able
+    // to level at a steady pace without exp requirements becoming either too steep or too easy
     private void CheckLevelUp()
     {
         // This loop is to help handle multiple level-ups when the experience is greater than one levelup threshold
@@ -213,6 +223,11 @@ public class Player : MonoBehaviour
         CurrentHealth += amount;
     }
 
+    public void UpgradePercentHealth(float amount)
+    {
+        
+    }
+
     public void UpgradePickupRadius(float amount)
     {
         pickupRadius += amount;
@@ -222,8 +237,7 @@ public class Player : MonoBehaviour
     public void UpgradeCritChance(float percentage)
     {
         critChance += percentage / 100f;
-        critChance = Mathf.Clamp(critChance, 0f, 1f); // Clamping between 0 and 1, either the player can crit or not. No over-crits
-        Debug.Log("Crit chance increased to " + (critChance * 100f) + "%");
+        Debug.Log("Crit chance increased to " + critChance * 100f + "%");
     }
     
     public void UpgradeCritDamage(float multiplierIncrease)
@@ -232,9 +246,21 @@ public class Player : MonoBehaviour
         Debug.Log("Critical damage multiplier increased to " + critDamageMultiplier + "x");
     }
     
-    public void UpgradeAttackSpeed()
+    public void UpgradeAttackSpeed(float amount)
     {
-        
+        attackSpeed += amount;
+        Debug.Log("Attack speed increased to " + attackSpeed);
+    }
+    
+    public void UpgradeDamage(int amount)
+    {
+        basePlayerDamage += amount;
+        Debug.Log("Player damage increased by " + amount + ". Total player damage is now " + TotalPlayerDamage);
+    }
+    
+    public int TotalPlayerDamage
+    {
+        get => basePlayerDamage;
     }
     
     void OnDrawGizmosSelected()

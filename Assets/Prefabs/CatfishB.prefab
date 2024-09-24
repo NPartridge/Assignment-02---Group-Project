@@ -2534,6 +2534,7 @@ MonoBehaviour:
   health: 100
   attackSpeed: 2
   gemPrefab: {fileID: 3564743645360956725, guid: 5e94ec3ba0b726140afe335b2aee1f43, type: 3}
+  damageNumberPrefab: {fileID: 4775476507757662158, guid: e1eb92d2126d94440b7c56c74dfe3d2b, type: 3}
 --- !u!136 &733874419979213836
 CapsuleCollider:
   m_ObjectHideFlags: 0
