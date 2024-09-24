@@ -14,8 +14,6 @@ public class WeaponScript : MonoBehaviour
     [SerializeField] private float weaponAttackSpeed = 0.5f;
     [SerializeField] private int weaponDamage = 0;
 
-    public int WeaponDamage => weaponDamage;
-
     void Start()
     {
         //playerScript = GetComponent<Player>();
@@ -61,12 +59,12 @@ public class WeaponScript : MonoBehaviour
         }
 
         GameObject bullet = Instantiate(bulletPrefab, weaponFiringPoint.position, weaponFiringPoint.rotation);
-
         BulletScript bulletScript = bullet.GetComponent<BulletScript>();
 
         if (bulletScript != null)
         {
-            bulletScript.SetDamage(totalDamage);
+            bulletScript.SetDamage(totalDamage, isCritical);
         }
+        Debug.Log(isCritical ? $"Critical Hit! Damage: {totalDamage}" : $"Normal Hit. Damage: {totalDamage}");
     }
 }

@@ -7,6 +7,7 @@ public class BulletScript : MonoBehaviour
 
     Vector3 startPosition;
     private int damage = 0;
+    private bool isCritical = false;
     
     void Start()
     {
@@ -32,9 +33,10 @@ public class BulletScript : MonoBehaviour
         }
     }
     
-    public void SetDamage(int damageAmount)
+    public void SetDamage(int damageAmount, bool critical)
     {
         damage = damageAmount;
+        isCritical = critical;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -46,7 +48,7 @@ public class BulletScript : MonoBehaviour
 
             if (enemy != null)
             {
-                enemy.TakeDamage(damage); // Deal the damage
+                enemy.TakeDamage(damage, isCritical); // Deal the damage
             }
 
             // Destroy the bullet on hit

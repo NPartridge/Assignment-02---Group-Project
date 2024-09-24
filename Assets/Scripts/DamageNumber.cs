@@ -46,7 +46,7 @@ public class DamageNumber : MonoBehaviour
         }
     }
 
-    public void SetDamage(int damage, bool isCrit)
+    public void DisplayDamage(int damage, bool isCrit)
     {
         if (damageText != null)
         {

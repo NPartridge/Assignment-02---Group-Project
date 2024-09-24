@@ -58,7 +58,7 @@ public class UpgradeManager : MonoBehaviour
             allUpgrades.RemoveAt(index);
         }
 
-        //Debug.Log("Selected Upgrades Count: " + selectedUpgrades.Count);
+        //Debug.Log("Amount of upgrades to choose from (should usually be 3): " + selectedUpgrades.Count);
         
         foreach (var up in selectedUpgrades)
         {
@@ -130,19 +130,19 @@ public class UpgradeManager : MonoBehaviour
         switch (upgrade)
         {
             case UpgradeType.MovementSpeed:
-                player.UpgradeMovementSpeed(0.5f);
+                player.UpgradeMovementSpeed(0.6f);
                 break;
             case UpgradeType.RotationSpeed:
-                player.UpgradeRotationSpeed(0.5f);
+                player.UpgradeRotationSpeed(0.6f);
                 break;
             case UpgradeType.FlatHealth:
-                player.UpgradeFlatHealth(10);
+                player.UpgradeFlatHealth(12);
                 break;
             case UpgradeType.PickupRadius:
                 player.UpgradePickupRadius(0.5f);
                 break;
             case UpgradeType.CritChance:
-                player.UpgradeCritChance(0.4f);
+                player.UpgradeCritChance(1f);
                 break;
             case UpgradeType.CritDamage:
                 player.UpgradeCritDamage(0.15f);

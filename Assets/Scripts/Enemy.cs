@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
     
-    [Header("AI stat sheet")]
+    [Header("Enemy stat sheet")]
     [SerializeField] public float speed = 3f;
     [SerializeField] private int damage = 5;
     public int health = 100;
@@ -102,13 +102,13 @@ public class Enemy : MonoBehaviour
         // Debug.Log("Enemy dealt " + amount + " damage!");
     }
     
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool isCritical)
     {
         if (IsDead)
             return; // If the enemy is dead we don't need to deal damage
 
         health -= damage;
-        ShowDamageNumber(damage);
+        ShowDamageNumber(damage, isCritical);
         
         if (health <= 0f)
         {
@@ -116,7 +116,7 @@ public class Enemy : MonoBehaviour
         }
     }
     
-    private void ShowDamageNumber(int damage)
+    private void ShowDamageNumber(int damage, bool isCritical)
     {
         // Raising the position slightly higher so the number starts somewhere around the enemies head
         GameObject dmgNumber = Instantiate(damageNumberPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
@@ -127,7 +127,7 @@ public class Enemy : MonoBehaviour
         DamageNumber dmgNumberScript = dmgNumber.GetComponent<DamageNumber>();
         if (dmgNumberScript != null)
         {
-            dmgNumberScript.SetDamage(damage, false);
+            dmgNumberScript.DisplayDamage(damage, isCritical);
         }
         else
         {
