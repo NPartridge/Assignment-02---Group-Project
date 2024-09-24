@@ -6,21 +6,36 @@ public class Player : MonoBehaviour
     [Header("Player stat sheet")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
-    [SerializeField] private int health = 100;
+    
+    [SerializeField] private int currentHealth;
+    [SerializeField] private int baseMaximumHealth = 100;
+    private int flatHealthIncrease = 0;
+    
     public int experience = 0;
     public float pickupRadius = 5f;
+    
+    [SerializeField] private float critChance = 0f;
+    [SerializeField] private float critDamageMultiplier = 1.5f;
+    
+    [SerializeField] private float attackSpeed = 1f;
 
-    public int Health
+    [Header("Levelling System")]
+    public int level = 1;
+    public int experienceToNextLevel = 0;
+    
+    public int MaximumHealth
     {
-        get
-        {
-            return health;
-        }
+        get => baseMaximumHealth + flatHealthIncrease;
+    }
+    
+    public int CurrentHealth
+    {
+        get => currentHealth;
         set
         {
-            health = value;
-            Debug.Log("Current player health: " + value);
-            if (health <= 0)
+            currentHealth = Mathf.Clamp(value, 0, MaximumHealth);
+            Debug.Log("Current player health: " + currentHealth + "/" + MaximumHealth);
+            if (currentHealth <= 0)
             {
                 Debug.Log("Player is dead!");
             }
@@ -29,10 +44,17 @@ public class Player : MonoBehaviour
 
     public bool AutoAimEnabled { get; private set; }
  
+    private UpgradeManager upgradeManager;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
+        upgradeManager = FindObjectOfType<UpgradeManager>();
+        if (upgradeManager == null)
+        {
+            Debug.LogError("No ugprade manager in scene");
+        }
+        CurrentHealth = MaximumHealth; // Init current health to max HP on start
     }
 
     void Update()
@@ -139,7 +161,80 @@ public class Player : MonoBehaviour
     public void AddExperience(int amount)
     {
         experience += amount;
-        Debug.Log("Player received: " + amount + " experience. Total player experience: " + experience);
+        //Debug.Log("Player received: " + amount + " experience. Total player experience: " + experience);
+        CheckLevelUp();
+    }
+    
+    // Currently levelling up is based on a quadratic formula (the change in the change of our y is constant)
+    // Base exp = 100 -> 400 -> 900 -> 1600 -> 2500 -> 3600 -> (This is the change in our y, NOT CONSTANT)
+    // Differences =  300 -> 500 -> 700 -> 900 -> 1100 -> (This is the change in the change of our y, IS CONSTANT)
+    // We probably do not want a linear or exponential system for this game
+    private void CheckLevelUp()
+    {
+        // This loop is to help handle multiple level-ups when the experience is greater than one levelup threshold
+        while (experience >= CalculateTotalExperienceForLevel(level + 1))
+        {
+            level++;
+            Debug.Log("Player leveled up to level " + level + "!");
+            
+            if (upgradeManager != null)
+            {
+                upgradeManager.ShowUpgradeOptions(this);
+            }
+        }
+        
+        experienceToNextLevel = CalculateTotalExperienceForLevel(level + 1);
+    }
+
+    private int CalculateTotalExperienceForLevel(int targetLevel)
+    {
+        int baseXP = 100;
+        return baseXP * (targetLevel - 1) * (targetLevel - 1);
+    }
+    
+    public void UpgradeMovementSpeed(float amount)
+    {
+        speed += amount;
+        Debug.Log("Movement speed increased to " + speed);
+    }
+
+    public void UpgradeRotationSpeed(float amount)
+    {
+        rotationSpeed += amount;
+        Debug.Log("Rotation speed increased to " + rotationSpeed);
+    }
+    
+    public void UpgradeFlatHealth(int amount)
+    {
+        flatHealthIncrease += amount;
+        Debug.Log("Flat health increased by " + amount + ". Total health is now " + MaximumHealth);
+        
+        // Increase the current HP as well as the maximum HP
+        CurrentHealth += amount;
+    }
+
+    public void UpgradePickupRadius(float amount)
+    {
+        pickupRadius += amount;
+        Debug.Log("Pickup radius increased to " + pickupRadius);
+    }
+    
+    public void UpgradeCritChance(float percentage)
+    {
+        critChance += percentage / 100f;
+        critChance = Mathf.Clamp(critChance, 0f, 1f); // Clamping between 0 and 1, either the player can crit or not. No over-crits
+        Debug.Log("Crit chance increased to " + (critChance * 100f) + "%");
+    }
+    
+    public void UpgradeCritDamage(float multiplierIncrease)
+    {
+        critDamageMultiplier += multiplierIncrease;
+        Debug.Log("Critical damage multiplier increased to " + critDamageMultiplier + "x");
+    }
+    
+    public void UpgradeAttackSpeed()
+    {
+        
     }
     
     void OnDrawGizmosSelected()
@@ -148,5 +243,4 @@ public class Player : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, pickupRadius);
     }
-
 }

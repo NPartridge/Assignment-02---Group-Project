@@ -69,7 +69,7 @@ public class Enemy : MonoBehaviour
         else
         {
             // Check if the player is alive before attacking
-            if (playerScript.Health > 0)
+            if (playerScript.CurrentHealth > 0)
             {
                 // If enemy is close enough to player, attack!
                 Attack();
@@ -95,7 +95,7 @@ public class Enemy : MonoBehaviour
 
     void DamagePlayer(int amount)
     {
-        playerScript.Health -= amount;
+        playerScript.CurrentHealth -= amount;
         // Debug.Log("Enemy dealt " + amount + " damage!");
     }
     
