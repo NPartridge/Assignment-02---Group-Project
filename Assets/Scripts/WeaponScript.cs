@@ -65,6 +65,5 @@ public class WeaponScript : MonoBehaviour
         {
             bulletScript.SetDamage(totalDamage, isCritical);
         }
-        Debug.Log(isCritical ? $"Critical Hit! Damage: {totalDamage}" : $"Normal Hit. Damage: {totalDamage}");
     }
 }

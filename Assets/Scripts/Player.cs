@@ -243,7 +243,7 @@ public class Player : MonoBehaviour
     public void UpgradeCritDamage(float multiplierIncrease)
     {
         critDamageMultiplier += multiplierIncrease;
-        Debug.Log("Critical damage multiplier increased to " + critDamageMultiplier + "x");
+        Debug.Log("Crit damage multi increased to " + critDamageMultiplier + "x");
     }
     
     public void UpgradeAttackSpeed(float amount)
