@@ -19,8 +19,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float attackSpeed = 1f;
 
-    // [SerializeField] private int basePlayerDamage = 0;
-    // private int flatPlayerDamageIncrease = 0;
+    [SerializeField] private int basePlayerDamage = 0;
+    private int flatPlayerDamageIncrease = 0;
 
     // We need attack speed, crit chance, and crit multi in the weapon script
     public float AttackSpeed => attackSpeed;
@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
             Debug.Log("Current player health: " + currentHealth + "/" + MaximumHealth);
             if (currentHealth <= 0)
             {
+                // Tell the animator that the player is dead, and perform death animation
+                animator.SetBool("isDead", true);
                 animator.SetTrigger("die");
                 Debug.Log("Player is dead!");
             }
@@ -53,23 +55,20 @@ public class Player : MonoBehaviour
 
     public bool AutoAimEnabled { get; private set; }
 
-    // private UpgradeManager upgradeManager;
-
     private Animator animator;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
-
         CurrentHealth = MaximumHealth; // Init current health to max HP on start
         animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        MovePlayer();
-        RotatePlayer();
-        CheckAutoAimToggle();
+            MovePlayer();
+            RotatePlayer();
+            CheckAutoAimToggle();
     }
 
     private void MovePlayer()

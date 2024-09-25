@@ -12,8 +12,8 @@ public class Enemy : MonoBehaviour
     
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
-    
-    [Header("AI stat sheet")]
+
+    [Header("Enemy stat sheet")]
     [SerializeField] public float speed = 3f;
     [SerializeField] private int damage = 5;
     public int health = 100;
@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour
     private static readonly int IsEnemyMoving = Animator.StringToHash("isMoving");
     private static readonly int AttackAnimationTrigger = Animator.StringToHash("Attack");
     private static readonly int DeathAnimationTrigger = Animator.StringToHash("Die");
+
+    [SerializeField] private GameObject damageNumberPrefab;
     public bool IsDead { get; private set; }
 
     void Start()

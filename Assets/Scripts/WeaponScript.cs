@@ -10,10 +10,8 @@ public class WeaponScript : MonoBehaviour
     private Player playerScript;
     
     [Header("Weapon stat sheet")]
-    [SerializeField] private float fireRate = 0.5f;
+    [SerializeField] private float weaponAttackSpeed = 0.5f;
     [SerializeField] private int weaponDamage;
-
-    public int WeaponDamage { get => weaponDamage; set => weaponDamage = value; }
 
     public Animator animator;
     void Start()
@@ -24,26 +22,32 @@ public class WeaponScript : MonoBehaviour
 
     void Update()
     {
-        if (playerScript.AutoAimEnabled)
+        // Only shoot if the player is alive
+        if (playerScript.CurrentHealth > 0)
         {
-            // Auto-aim is enabled, fire automatically
-            if (Time.time > nextFire)
+            float effectiveAttackSpeed = weaponAttackSpeed / playerScript.AttackSpeed;
+
+            if (playerScript.AutoAimEnabled)
             {
-                nextFire = Time.time + fireRate;
-                // display autoattack animation
-                animator.SetBool("autoAttackEnabled", true);
-                Shoot();
+                // Auto-aim is enabled, fire automatically
+                if (Time.time > nextFire)
+                {
+                    nextFire = Time.time + effectiveAttackSpeed;
+                    // display autoattack animation
+                    animator.SetBool("autoAttackEnabled", true);
+                    Shoot();
+                }
             }
-        }
-        else
-        {
-            // Auto-aim is disabled here, only fire when the player clicks the mouse button
-            if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
+            else
             {
-                nextFire = Time.time + fireRate;
-                //display attack animation
-                animator.SetTrigger("attack");
-                Shoot();
+                // Auto-aim is disabled here, only fire when the player clicks the mouse button
+                if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
+                {
+                    nextFire = Time.time + effectiveAttackSpeed;
+                    //display attack animation
+                    animator.SetTrigger("attack");
+                    Shoot();
+                }
             }
         }
     }
