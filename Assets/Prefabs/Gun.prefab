@@ -236,9 +236,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6298ea889d093e4aac6ca534a97e38e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireRate: 0.5
   bulletPrefab: {fileID: 0}
-  weaponOffsetTransform: {fileID: 0}
+  weaponFiringPoint: {fileID: 0}
+  weaponAttackSpeed: 0.5
+  weaponDamage: 0
+  damageNumberPrefab: {fileID: 4775476507757662158, guid: e1eb92d2126d94440b7c56c74dfe3d2b, type: 3}
+  damageNumberSpawnPoint: {fileID: 0}
 --- !u!1 &4214730040331134076
 GameObject:
   m_ObjectHideFlags: 0

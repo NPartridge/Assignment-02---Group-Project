@@ -4,8 +4,6 @@ public class WeaponScript : MonoBehaviour
 {
     private float nextFire;
     public GameObject bulletPrefab;
-
-
     
     // This should be an empty prefab at the location where the projectiles for the weapon should be fired from
     [SerializeField] private Transform weaponFiringPoint;
@@ -13,10 +11,8 @@ public class WeaponScript : MonoBehaviour
     private Player playerScript;
     
     [Header("Weapon stat sheet")]
-    [SerializeField] private float fireRate = 0.5f;
-    [SerializeField] private int weaponDamage;
-
-    public int WeaponDamage { get => weaponDamage; set => weaponDamage = value; }
+    [SerializeField] private float weaponAttackSpeed = 0.5f;
+    [SerializeField] private int weaponDamage = 0;
 
     void Start()
     {
@@ -26,12 +22,14 @@ public class WeaponScript : MonoBehaviour
 
     void Update()
     {
+        float effectiveAttackSpeed = weaponAttackSpeed / playerScript.AttackSpeed;
+        
         if (playerScript.AutoAimEnabled)
         {
             // Auto-aim is enabled, fire automatically
             if (Time.time > nextFire)
             {
-                nextFire = Time.time + fireRate;
+                nextFire = Time.time + effectiveAttackSpeed;
                 Shoot();
             }
         }
@@ -40,7 +38,7 @@ public class WeaponScript : MonoBehaviour
             // Auto-aim is disabled here, only fire when the player clicks the mouse button
             if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
             {
-                nextFire = Time.time + fireRate;
+                nextFire = Time.time + effectiveAttackSpeed;
                 Shoot();
             }
         }
@@ -48,6 +46,24 @@ public class WeaponScript : MonoBehaviour
 
     private void Shoot()
     {
-        Instantiate(bulletPrefab, weaponFiringPoint.position, weaponFiringPoint.rotation);
+        int baseDamage = playerScript.TotalPlayerDamage + weaponDamage;
+        
+        // Check if the attack is a crit
+        bool isCritical = Random.value <= playerScript.CritChance;
+
+        int totalDamage = baseDamage;
+
+        if (isCritical)
+        {
+            totalDamage = Mathf.RoundToInt(baseDamage * playerScript.CritDamageMultiplier);
+        }
+
+        GameObject bullet = Instantiate(bulletPrefab, weaponFiringPoint.position, weaponFiringPoint.rotation);
+        BulletScript bulletScript = bullet.GetComponent<BulletScript>();
+
+        if (bulletScript != null)
+        {
+            bulletScript.SetDamage(totalDamage, isCritical);
+        }
     }
 }

@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
     
-    [Header("AI stat sheet")]
+    [Header("Enemy stat sheet")]
     [SerializeField] public float speed = 3f;
     [SerializeField] private int damage = 5;
     public int health = 100;
@@ -25,6 +25,9 @@ public class Enemy : MonoBehaviour
     private static readonly int IsEnemyMoving = Animator.StringToHash("isMoving");
     private static readonly int AttackAnimationTrigger = Animator.StringToHash("Attack");
     private static readonly int DeathAnimationTrigger = Animator.StringToHash("Die");
+    
+    [SerializeField] private GameObject damageNumberPrefab;
+    
     public bool IsDead { get; private set; }
 
     void Start()
@@ -69,7 +72,7 @@ public class Enemy : MonoBehaviour
         else
         {
             // Check if the player is alive before attacking
-            if (playerScript.Health > 0)
+            if (playerScript.CurrentHealth > 0)
             {
                 // If enemy is close enough to player, attack!
                 Attack();
@@ -95,21 +98,44 @@ public class Enemy : MonoBehaviour
 
     void DamagePlayer(int amount)
     {
-        playerScript.Health -= amount;
+        playerScript.CurrentHealth -= amount;
         // Debug.Log("Enemy dealt " + amount + " damage!");
     }
     
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool isCritical)
     {
         if (IsDead)
             return; // If the enemy is dead we don't need to deal damage
 
         health -= damage;
+        ShowDamageNumber(damage, isCritical);
+        
         if (health <= 0f)
         {
             Die();
         }
     }
+    
+    private void ShowDamageNumber(int damage, bool isCritical)
+    {
+        // Raising the position slightly higher so the number starts somewhere around the enemies head
+        GameObject dmgNumber = Instantiate(damageNumberPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
+        
+        dmgNumber.transform.SetParent(transform);
+
+        // Set the amount of damgae
+        DamageNumber dmgNumberScript = dmgNumber.GetComponent<DamageNumber>();
+        if (dmgNumberScript != null)
+        {
+            dmgNumberScript.DisplayDamage(damage, isCritical);
+        }
+        else
+        {
+            Debug.LogError("DMG number script not on prefab");
+        }
+    }
+
+
 
     void Die()
     {

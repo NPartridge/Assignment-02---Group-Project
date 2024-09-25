@@ -6,12 +6,12 @@ public class BulletScript : MonoBehaviour
     [SerializeField] float maxDistance = 20f;
 
     Vector3 startPosition;
-    int damage;
+    private int damage = 0;
+    private bool isCritical = false;
+    
     void Start()
     {
         startPosition = transform.position;
-        // Get the damage of the weapon that the bullet was fired from
-        damage = GameObject.FindObjectOfType<WeaponScript>().WeaponDamage;
     }
 
     void Update()
@@ -32,6 +32,12 @@ public class BulletScript : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
+    public void SetDamage(int damageAmount, bool critical)
+    {
+        damage = damageAmount;
+        isCritical = critical;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -42,7 +48,7 @@ public class BulletScript : MonoBehaviour
 
             if (enemy != null)
             {
-                enemy.TakeDamage(damage); // Deal the damage
+                enemy.TakeDamage(damage, isCritical); // Deal the damage
             }
 
             // Destroy the bullet on hit

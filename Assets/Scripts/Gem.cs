@@ -28,13 +28,13 @@ public class Gem : MonoBehaviour
         // Add some randomness to the gems bounce so they dont all bounce in sync
         if (gemType == GemType.Experience)
         {
-            bounceHeight += Random.Range(-0.05f, 0.5f);
-            bounceSpeed += Random.Range(-0.2f, 0.3f);
+            bounceHeight += Random.Range(0.05f, 0.5f);
+            bounceSpeed += Random.Range(0.2f, 0.3f);
         }
         else if (gemType == GemType.Vacuum)
         {
-            bounceHeight += Random.Range(-0.05f, 0.1f);
-            bounceSpeed += Random.Range(-0.2f, 0.3f);
+            bounceHeight += Random.Range(0.05f, 0.1f);
+            bounceSpeed += Random.Range(0.2f, 0.3f);
         }
         bounceOffset = Random.Range(0, 5);
 
