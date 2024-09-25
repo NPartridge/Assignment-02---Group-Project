@@ -175,6 +175,11 @@ public class Player : MonoBehaviour
         //Debug.Log("Player received: " + amount + " experience. Total player experience: " + experience);
     }
 
+    public int TotalPlayerDamage
+    {
+        get => basePlayerDamage;
+    }
+
     void OnDrawGizmosSelected()
     {
         // A yellow sphere of the players pickup radius. The player needs to be selected in the editor for this to appear

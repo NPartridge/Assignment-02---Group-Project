@@ -54,11 +54,29 @@ public class WeaponScript : MonoBehaviour
 
     private void Shoot()
     {
+        int baseDamage = playerScript.TotalPlayerDamage + weaponDamage;
+
+        // Check if the attack is a crit
+        bool isCritical = Random.value <= playerScript.CritChance;
+
+        int totalDamage = baseDamage;
+
+        if (isCritical)
+        {
+            totalDamage = Mathf.RoundToInt(baseDamage * playerScript.CritDamageMultiplier);
+        }
+
         // Get the rotation of the root of the rig 
         Quaternion rotation = GameObject.FindGameObjectWithTag("Root").transform.rotation;
         // fire the bullet in the direction that the rig is rotated
-        Instantiate(bulletPrefab, weaponFiringPoint.position, rotation);
+        GameObject bullet = Instantiate(bulletPrefab, weaponFiringPoint.position, rotation);
 
+        BulletScript bulletScript = bullet.GetComponent<BulletScript>();
+
+        if (bulletScript != null)
+        {
+            bulletScript.SetDamage(totalDamage, isCritical);
+        }
     }
 
 }
