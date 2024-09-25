@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54217b79ec5c8d74ca1fb5fecb0fd6fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 1954654799}
   cameraOffset: {x: 0, y: 8, z: -5}
 --- !u!1001 &1582999324
 PrefabInstance:
@@ -385,6 +385,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d44f158b9c7fc134bbfe30bf7790f70e, type: 3}
+--- !u!4 &1954654799 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5980849223690577201, guid: fcc80580ba585424cac96248d9d6e367, type: 3}
+  m_PrefabInstance: {fileID: 2077646353}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2054253156
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,7 +420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8791423355743301627, guid: 079db42af01a151418638623bd8e2d40, type: 3}
-  player: {fileID: 0}
+  player: {fileID: 1954654799}
   playerSpawnRadius: 25
   maxEnemies: 4
   spawnInterval: 1
