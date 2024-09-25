@@ -4,9 +4,6 @@ public class WeaponScript : MonoBehaviour
 {
     private float nextFire;
     public GameObject bulletPrefab;
-
-
-    
     // This should be an empty prefab at the location where the projectiles for the weapon should be fired from
     [SerializeField] private Transform weaponFiringPoint;
     
@@ -18,6 +15,7 @@ public class WeaponScript : MonoBehaviour
 
     public int WeaponDamage { get => weaponDamage; set => weaponDamage = value; }
 
+    public Animator animator;
     void Start()
     {
         //playerScript = GetComponent<Player>();
@@ -32,6 +30,8 @@ public class WeaponScript : MonoBehaviour
             if (Time.time > nextFire)
             {
                 nextFire = Time.time + fireRate;
+                // display autoattack animation
+                animator.SetBool("autoAttackEnabled", true);
                 Shoot();
             }
         }
@@ -41,6 +41,8 @@ public class WeaponScript : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
             {
                 nextFire = Time.time + fireRate;
+                //display attack animation
+                animator.SetTrigger("attack");
                 Shoot();
             }
         }
@@ -48,6 +50,11 @@ public class WeaponScript : MonoBehaviour
 
     private void Shoot()
     {
-        Instantiate(bulletPrefab, weaponFiringPoint.position, weaponFiringPoint.rotation);
+        // Get the rotation of the root of the rig 
+        Quaternion rotation = GameObject.FindGameObjectWithTag("Root").transform.rotation;
+        // fire the bullet in the direction that the rig is rotated
+        Instantiate(bulletPrefab, weaponFiringPoint.position, rotation);
+
     }
+
 }

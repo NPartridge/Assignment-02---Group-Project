@@ -6,33 +6,63 @@ public class Player : MonoBehaviour
     [Header("Player stat sheet")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
-    [SerializeField] private int health = 100;
+
+    [SerializeField] private int currentHealth;
+    [SerializeField] private int baseMaximumHealth = 100;
+    private int flatHealthIncrease = 0;
+
     public int experience = 0;
     public float pickupRadius = 5f;
 
-    public int Health
+    [SerializeField] private float critChance = 0f;
+    [SerializeField] private float critDamageMultiplier = 2f;
+
+    [SerializeField] private float attackSpeed = 1f;
+
+    // [SerializeField] private int basePlayerDamage = 0;
+    // private int flatPlayerDamageIncrease = 0;
+
+    // We need attack speed, crit chance, and crit multi in the weapon script
+    public float AttackSpeed => attackSpeed;
+    public float CritChance => critChance;
+    public float CritDamageMultiplier => critDamageMultiplier;
+
+    [Header("Levelling System")]
+    public int level = 1;
+    public int experienceToNextLevel = 0;
+
+    public int MaximumHealth
     {
-        get
-        {
-            return health;
-        }
+        get => baseMaximumHealth + flatHealthIncrease;
+    }
+
+    public int CurrentHealth
+    {
+        get => currentHealth;
         set
         {
-            health = value;
-            Debug.Log("Current player health: " + value);
-            if (health <= 0)
+            currentHealth = Mathf.Clamp(value, 0, MaximumHealth);
+            Debug.Log("Current player health: " + currentHealth + "/" + MaximumHealth);
+            if (currentHealth <= 0)
             {
+                animator.SetTrigger("die");
                 Debug.Log("Player is dead!");
             }
         }
     }
 
     public bool AutoAimEnabled { get; private set; }
- 
+
+    // private UpgradeManager upgradeManager;
+
+    private Animator animator;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
+
+        CurrentHealth = MaximumHealth; // Init current health to max HP on start
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -50,7 +80,11 @@ public class Player : MonoBehaviour
         Vector3 direction = new Vector3(horizontalInput, 0, forwardInput).normalized;
         Vector3 velocity = direction * speed;
 
-        transform.Translate(velocity * Time.deltaTime, Space.World);
+        // Update Animation Parameters
+        animator.SetFloat("velocityX", direction.x);
+        animator.SetFloat("velocityZ", direction.z);
+
+        transform.Translate(velocity * Time.deltaTime, Space.Self);
     }
 
     private void RotatePlayer()
@@ -73,7 +107,7 @@ public class Player : MonoBehaviour
         {
             Vector3 enemyDirection = nearestEnemy.transform.position - transform.position;
             enemyDirection.y = 0; // Keep only the horizontal direction
-            
+
             // Calculate the rotation needed to face the enemy
             Quaternion targetRotation = Quaternion.LookRotation(enemyDirection);
 
@@ -115,16 +149,16 @@ public class Player : MonoBehaviour
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         GameObject nearestEnemy = null;
         float minDistance = Mathf.Infinity; // https://docs.unity3d.com/ScriptReference/Mathf.Infinity.html
-        
+
         // Go through all the enemies and find the closest one
         foreach (GameObject enemy in enemies)
         {
             Enemy enemyScript = enemy.GetComponent<Enemy>();
-            
+
             // We want to avoid targeting enemies that are dead
             if (enemyScript == null || enemyScript.IsDead)
                 continue;
-            
+
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
             if (distance < minDistance)
             {
@@ -135,18 +169,17 @@ public class Player : MonoBehaviour
 
         return nearestEnemy;
     }
-    
+
     public void AddExperience(int amount)
     {
         experience += amount;
-        Debug.Log("Player received: " + amount + " experience. Total player experience: " + experience);
+        //Debug.Log("Player received: " + amount + " experience. Total player experience: " + experience);
     }
-    
+
     void OnDrawGizmosSelected()
     {
         // A yellow sphere of the players pickup radius. The player needs to be selected in the editor for this to appear
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, pickupRadius);
     }
-
 }
