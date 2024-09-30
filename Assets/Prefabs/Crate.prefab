@@ -120,4 +120,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dropTable:
   - {fileID: 1536197973191690435, guid: d44f158b9c7fc134bbfe30bf7790f70e, type: 3}
-  - {fileID: 1536197973191690435, guid: d44f158b9c7fc134bbfe30bf7790f70e, type: 3}
+  - {fileID: 4826342286264891340, guid: 5a444dccc174e2342bf8d7daaa9a45d2, type: 3}
