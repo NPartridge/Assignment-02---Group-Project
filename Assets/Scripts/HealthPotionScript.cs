@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PotionScript : MonoBehaviour
+public class HealthPotionScript : MonoBehaviour
 {
     public int healthRestoreValue = 20;
 
