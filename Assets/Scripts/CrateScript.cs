@@ -23,7 +23,7 @@ public class CrateScript : MonoBehaviour
     {
         // chose a random item from the droptable for a crate
         int itemNumber = Random.Range(0, dropTable.Count);
-        // spawn the drop item
-        Instantiate(dropTable[0], transform.position, Quaternion.identity);
+        // spawn the drop item at space 1 unit above the crate location
+        Instantiate(dropTable[itemNumber], transform.position + Vector3.up, Quaternion.identity);
     }
 }

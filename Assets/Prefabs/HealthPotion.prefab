@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 1047620202145320124}
   - component: {fileID: 3111796975043486832}
   m_Layer: 0
-  m_Name: Potion
+  m_Name: HealthPotion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,7 +118,7 @@ Transform:
   m_Children:
   - {fileID: 1038739995543473547}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2495202962979791786
 MeshFilter:
@@ -182,7 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b21d286b20329bf4189d691a32edbd8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerScript: {fileID: 0}
   healthRestoreValue: 20
 --- !u!136 &1047620202145320124
 CapsuleCollider:
