@@ -8,8 +8,9 @@ public class CrateScript : MonoBehaviour
     public List<GameObject> dropTable;
 
     private void OnTriggerEnter(Collider other)
-    {   
-        if (other.CompareTag("Bullet")){
+    {
+        if (other.CompareTag("Bullet"))
+        {
             // spawn an item
             SpawnRandomDrop();
             // destroy the bullet
