@@ -6740,10 +6740,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8791423355743301627, guid: 079db42af01a151418638623bd8e2d40, type: 3}
+  maxEnemies: 20
+  spawnInterval: 0.1
+  bossPrefab: {fileID: 6408897766248347207, guid: 2aa419266b65fe849b000c20d76e7843, type: 3}
+  bossSpawnInterval: 5
   player: {fileID: 495578330}
-  playerSpawnRadius: 25
-  maxEnemies: 9
-  spawnInterval: 0.3
+  maximumSpawnDistance: 30
+  minSpawnDistance: 20
 --- !u!4 &2054253158
 Transform:
   m_ObjectHideFlags: 0

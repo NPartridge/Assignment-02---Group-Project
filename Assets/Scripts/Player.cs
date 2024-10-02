@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float attackSpeed = 1f;
     
     [SerializeField] private int basePlayerDamage = 0;
-    private int flatPlayerDamageIncrease = 0;
+    //private int flatPlayerDamageIncrease = 0;
 
     // We need attack speed, crit chance, and crit multi in the weapon script
     public float AttackSpeed => attackSpeed;
