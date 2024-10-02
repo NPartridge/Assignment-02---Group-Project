@@ -94,9 +94,10 @@ GameObject:
   - component: {fileID: 407437877953798727}
   - component: {fileID: 2495202962979791786}
   - component: {fileID: 4030117181859316468}
-  - component: {fileID: 2556266233942191102}
   - component: {fileID: 1047620202145320124}
   - component: {fileID: 3111796975043486832}
+  - component: {fileID: 7867767068145305708}
+  - component: {fileID: 164061662867869834}
   m_Layer: 0
   m_Name: HealthPotion
   m_TagString: Untagged
@@ -170,19 +171,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2556266233942191102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4826342286264891340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b21d286b20329bf4189d691a32edbd8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthRestoreValue: 20
 --- !u!136 &1047620202145320124
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -233,3 +221,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7867767068145305708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4826342286264891340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b21d286b20329bf4189d691a32edbd8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthRestoreValue: 20
+--- !u!114 &164061662867869834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4826342286264891340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13659c60b952f2e439c050f713c1d651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minBounceHeightVariation: 0.05
+  maxBounceHeightVariation: 0.3
+  minBounceSpeedVariation: 0.2
+  maxBounceSpeedVariation: 0.3
