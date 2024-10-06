@@ -1,6 +1,4 @@
-
-using System.Collections;
-
+using System;
 using UnityEngine;
 
 // Information to help rotate to mouse position found here: https://discussions.unity.com/t/rotate-towards-mouse-position/883950
@@ -273,18 +271,6 @@ public class Player : MonoBehaviour
     public int TotalPlayerDamage
     {
         get => basePlayerDamage;
-    }
-
-    public IEnumerator ApplyTemporarySpeedBuff(float amount, float duration)
-    {
-        // store the unmodified value
-        float originalValue = speed;
-        // increase the value by the amount
-        speed += amount;
-        // wait for the duration
-        yield return new WaitForSecondsRealtime(duration);
-        // revert to the original value
-        speed = originalValue;
     }
     
     void OnDrawGizmosSelected()
