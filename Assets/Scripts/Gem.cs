@@ -14,29 +14,10 @@ public class Gem : MonoBehaviour
     private Player playerScript;
     private float currentMoveSpeed;
 
-    private float bounceHeight = 0.2f;
-    private float bounceSpeed = 1f;
-    private float bounceOffset = 0.5f; // This is to help the bounce feel less uniform, more info about this in Bounce()
-    private Vector3 initialPosition;
-
     void Start()
     {
-        initialPosition = transform.position;
 
         currentMoveSpeed = moveSpeed;
-
-        // Add some randomness to the gems bounce so they dont all bounce in sync
-        if (gemType == GemType.Experience)
-        {
-            bounceHeight += Random.Range(0.05f, 0.5f);
-            bounceSpeed += Random.Range(0.2f, 0.3f);
-        }
-        else if (gemType == GemType.Vacuum)
-        {
-            bounceHeight += Random.Range(0.05f, 0.1f);
-            bounceSpeed += Random.Range(0.2f, 0.3f);
-        }
-        bounceOffset = Random.Range(0, 5);
 
         // Find the player in the scene and get the player position/script
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -56,7 +37,7 @@ public class Gem : MonoBehaviour
         if (!isMovingToPlayer)
         {
             // If the gem isn't moving towards the player, keep bouncing
-            Bounce();
+            GetComponent<BounceClass>().Bounce();
             
             // Check if the gem is within the pickup radius
             float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
@@ -78,16 +59,6 @@ public class Gem : MonoBehaviour
         {
             MoveGemTowardsPlayer();
         }
-    }
-
-    void Bounce()
-    {
-        // Calculate the new y pos using a sine wave with added randomness
-        // The code comes from here (small volume warning, the song he uses is kinda loud)
-        // How To Move Obstacles Or Even Enemy In Sine Wave Way Up And Down With Simple C# Script In Unity Game https://www.youtube.com/watch?v=UVqH2XS5E2M
-        float newY = initialPosition.y + Mathf.Sin(Time.time * bounceSpeed + bounceOffset) * bounceHeight;
-        Vector3 newPosition = new Vector3(initialPosition.x, newY, initialPosition.z);
-        transform.position = newPosition;
     }
 
     void MoveGemTowardsPlayer()

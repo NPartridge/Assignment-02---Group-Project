@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1453382803986068758}
   - component: {fileID: 8098503010403503453}
   - component: {fileID: 3736888691103779319}
+  - component: {fileID: 3161495290502096556}
   m_Layer: 0
   m_Name: DiamondGem
   m_TagString: Untagged
@@ -96,8 +97,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8808e05a6e3036b42a8048ccc9d14cc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gemType: 0
   moveSpeed: 10
   experiencePoints: 10
+  gemSpeedMultiplier: 2
+--- !u!114 &3161495290502096556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998526948480472883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13659c60b952f2e439c050f713c1d651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minBounceHeightVariation: 0.05
+  maxBounceHeightVariation: 0.5
+  minBounceSpeedVariation: 0.2
+  maxBounceSpeedVariation: 0.3
 --- !u!1 &3564743645360956725
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,5 +147,5 @@ Transform:
   m_Children:
   - {fileID: 1962289737131056721}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
