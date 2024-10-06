@@ -11,6 +11,8 @@ public class UpgradeManager : MonoBehaviour
     public Transform optionsContainer;
 
     private Player player;
+    
+    private PauseManager pauseManager;
 
     private enum UpgradeType
     {
@@ -32,15 +34,16 @@ public class UpgradeManager : MonoBehaviour
         }
         
         upgradePanel.SetActive(false);
+        
+        pauseManager = FindObjectOfType<PauseManager>();
     }
 
     public void ShowUpgradeOptions(Player player)
     {
         //Debug.Log("ShowUpgradeOptions called");
         this.player = player;
-
-        // Pause game
-        Time.timeScale = 0f;
+        
+        pauseManager.PauseGame(false);
         
         // Toggle the upgrade panel on
         upgradePanel.SetActive(true);
@@ -161,8 +164,8 @@ public class UpgradeManager : MonoBehaviour
 
     private void CloseUpgradeMenu()
     {
-        Time.timeScale = 1f;
-        
         upgradePanel.SetActive(false);
+        
+        pauseManager.ResumeGame(false);
     }
 }
