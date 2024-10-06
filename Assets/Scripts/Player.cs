@@ -1,4 +1,6 @@
+
 using System.Collections;
+
 using UnityEngine;
 
 // Information to help rotate to mouse position found here: https://discussions.unity.com/t/rotate-towards-mouse-position/883950
@@ -21,7 +23,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float attackSpeed = 1f;
     
     [SerializeField] private int basePlayerDamage = 0;
-    private int flatPlayerDamageIncrease = 0;
+    //private int flatPlayerDamageIncrease = 0;
 
     // We need attack speed, crit chance, and crit multi in the weapon script
     public float AttackSpeed => attackSpeed;
@@ -37,13 +39,22 @@ public class Player : MonoBehaviour
         get => baseMaximumHealth + flatHealthIncrease;
     }
     
+    public event Action<int, int> OnHealthChanged;
+
     public int CurrentHealth
     {
         get => currentHealth;
         set
         {
+            int previousHealth = currentHealth;
             currentHealth = Mathf.Clamp(value, 0, MaximumHealth);
-            Debug.Log("Current player health: " + currentHealth + "/" + MaximumHealth);
+            
+            if (currentHealth != previousHealth)
+            {
+                OnHealthChanged?.Invoke(currentHealth, MaximumHealth);
+                //Debug.Log("Current player health: " + currentHealth + "/" + MaximumHealth);
+            }
+
             if (currentHealth <= 0)
             {
                 Debug.Log("Player is dead!");
