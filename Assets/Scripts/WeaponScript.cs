@@ -4,41 +4,52 @@ public class WeaponScript : MonoBehaviour
 {
     private float nextFire;
     public GameObject bulletPrefab;
-    
+
     // This should be an empty prefab at the location where the projectiles for the weapon should be fired from
     [SerializeField] private Transform weaponFiringPoint;
-    
+
     private Player playerScript;
-    
+
     [Header("Weapon stat sheet")]
     [SerializeField] private float weaponAttackSpeed = 0.5f;
     [SerializeField] private int weaponDamage = 0;
+
+    public Animator animator;
 
     void Start()
     {
         //playerScript = GetComponent<Player>();
         playerScript = GetComponentInParent<Player>();
+
     }
 
     void Update()
     {
         float effectiveAttackSpeed = weaponAttackSpeed / playerScript.AttackSpeed;
-        
+
         if (playerScript.AutoAimEnabled)
         {
             // Auto-aim is enabled, fire automatically
             if (Time.time > nextFire)
             {
                 nextFire = Time.time + effectiveAttackSpeed;
+                // Display attack animation
+                animator.SetBool("autoAttackEnabled", true);
+
                 Shoot();
             }
         }
         else
         {
+            animator.SetBool("autoAttackEnabled", false);
             // Auto-aim is disabled here, only fire when the player clicks the mouse button
             if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
             {
                 nextFire = Time.time + effectiveAttackSpeed;
+
+                //display attack animation
+                animator.SetTrigger("attack");
+
                 Shoot();
             }
         }
@@ -47,7 +58,7 @@ public class WeaponScript : MonoBehaviour
     private void Shoot()
     {
         int baseDamage = playerScript.TotalPlayerDamage + weaponDamage;
-        
+
         // Check if the attack is a crit
         bool isCritical = Random.value <= playerScript.CritChance;
 
