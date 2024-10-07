@@ -58,6 +58,9 @@ public class Player : MonoBehaviour
 
             if (currentHealth <= 0)
             {
+                // Tell the animator that the player is dead, and perform death animation
+                animator.SetBool("isDead", true);
+                animator.SetTrigger("die");
                 Debug.Log("Player is dead!");
             }
         }
@@ -66,6 +69,8 @@ public class Player : MonoBehaviour
     public bool AutoAimEnabled { get; private set; }
  
     private UpgradeManager upgradeManager;
+
+    private Animator animator;
 
     private void Start()
     {
@@ -76,6 +81,8 @@ public class Player : MonoBehaviour
             Debug.LogError("No upgrade manager in scene");
         }
         CurrentHealth = MaximumHealth; // Init current health to max HP on start
+
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -91,6 +98,21 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxisRaw("Horizontal");
 
         Vector3 direction = new Vector3(horizontalInput, 0, forwardInput).normalized;
+
+
+        // We want to move the player in world space, but we also want the character model to always face an enemy target when
+        // auto-attacking or the mouse position when not 
+        // Further, if the character is facing to the right, pressing the horizontal input key for right, should walk it forward
+        // and pressing the horizontal left input should walk it backward
+        // Similarly, if the character is facing forward, pressing the vertical input key should walk it forward, and vertical input key
+        // for back should walk it backward
+        float forwardDotProduct = Vector3.Dot(direction, transform.forward);
+        float horizontalDotProduct = Vector3.Dot(direction, transform.right);
+
+        // Update Animation Parameters
+        animator.SetFloat("velocityX", horizontalDotProduct);
+        animator.SetFloat("velocityZ", forwardDotProduct);
+
         Vector3 velocity = direction * speed;
 
         transform.Translate(velocity * Time.deltaTime, Space.World);

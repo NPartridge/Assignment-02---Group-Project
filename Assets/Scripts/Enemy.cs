@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private Player playerScript;
-    public Transform player;
+    private Transform player;
     private CapsuleCollider playerCollider;
     private CapsuleCollider enemyCollider;
     private Animator animator;
@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerCollider = player.GetComponent<CapsuleCollider>();
+        playerCollider = player.GetComponentInChildren<CapsuleCollider>();   GetComponent<CapsuleCollider>();
         enemyCollider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
         playerScript = player.GetComponent<Player>();
