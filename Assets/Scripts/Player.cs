@@ -72,6 +72,8 @@ public class Player : MonoBehaviour
 
     private Animator animator;
 
+    private CharacterController characterController;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
@@ -83,6 +85,7 @@ public class Player : MonoBehaviour
         CurrentHealth = MaximumHealth; // Init current health to max HP on start
 
         animator = GetComponent<Animator>();
+        characterController = GetComponent<CharacterController>();
     }
 
     void Update()
@@ -115,7 +118,7 @@ public class Player : MonoBehaviour
 
         Vector3 velocity = direction * speed;
 
-        transform.Translate(velocity * Time.deltaTime, Space.World);
+        characterController.Move(velocity * Time.deltaTime);
     }
 
     private void RotatePlayer()

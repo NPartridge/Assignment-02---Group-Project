@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     private Player playerScript;
     private Transform player;
-    private CapsuleCollider playerCollider;
+    private CharacterController playerController;
     private CapsuleCollider enemyCollider;
     private Animator animator;
     
@@ -30,10 +30,11 @@ public class Enemy : MonoBehaviour
     
     public bool IsDead { get; private set; }
 
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerCollider = player.GetComponentInChildren<CapsuleCollider>();   GetComponent<CapsuleCollider>();
+        playerController = player.GetComponent<CharacterController>();  
         enemyCollider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
         playerScript = player.GetComponent<Player>();
@@ -50,7 +51,7 @@ public class Enemy : MonoBehaviour
     void MoveTowardsPlayer()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        float effectiveStopDistance = playerCollider.radius + stopDistance;
+        float effectiveStopDistance = playerController.radius + stopDistance;
 
         if (distanceToPlayer > effectiveStopDistance)
         {
