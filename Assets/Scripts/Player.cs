@@ -26,10 +26,11 @@ public class Player : MonoBehaviour
     [SerializeField] private int basePlayerDamage = 0;
     //private int flatPlayerDamageIncrease = 0;
 
-    // We need attack speed, crit chance, and crit multi in the weapon script
+    // We need attack speed, crit chance, and crit multi, and a check for if the player is alive in the weapon script
     public float AttackSpeed => attackSpeed;
-    public float CritChance => critChance; 
+    public float CritChance => critChance;
     public float CritDamageMultiplier => critDamageMultiplier;
+    public bool IsDead => isDead;
     
     [Header("Levelling System")]
     public int level = 1;
@@ -58,10 +59,12 @@ public class Player : MonoBehaviour
 
             if (currentHealth <= 0)
             {
-                // Tell the animator that the player is dead, and perform death animation
+                // Tell the animator that the player is dead, show death animation, display game over screen
                 animator.SetBool("isDead", true);
                 animator.SetTrigger("die");
-                Debug.Log("Player is dead!");
+                _gameOverManager.ShowGameOverUI();
+                isDead = true;
+                //Debug.Log("Player is dead!");
             }
         }
     }
@@ -69,27 +72,40 @@ public class Player : MonoBehaviour
     public bool AutoAimEnabled { get; private set; }
  
     private UpgradeManager upgradeManager;
-
+    private GameOverManager _gameOverManager;
+    private PauseManager pauseManager;
     private Animator animator;
+    private bool isDead = false;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
         upgradeManager = FindObjectOfType<UpgradeManager>();
-        if (upgradeManager == null)
+        _gameOverManager = FindObjectOfType<GameOverManager>();
+        pauseManager = FindObjectOfType<PauseManager>();
+        
+        if (upgradeManager == null || _gameOverManager == null || pauseManager == null)
         {
-            Debug.LogError("No upgrade manager in scene");
+            Debug.LogError("No upgrade manager, pause manager, and or game over manager in scene");
         }
+        
         CurrentHealth = MaximumHealth; // Init current health to max HP on start
-
         animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        MovePlayer();
-        RotatePlayer();
-        CheckAutoAimToggle();
+        // We don't want to update the player is they are dead
+        if (!isDead)
+        {
+            // We don't want to update the player is there is a menu open
+            if (!pauseManager.IsAnyMenuOpen())
+            {
+                MovePlayer();
+                RotatePlayer();
+                CheckAutoAimToggle();
+            }
+        }
     }
 
     private void MovePlayer()

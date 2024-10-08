@@ -15,16 +15,30 @@ public class WeaponScript : MonoBehaviour
     [SerializeField] private int weaponDamage = 0;
 
     public Animator animator;
+    
+    private PauseManager pauseManager;
 
     void Start()
     {
         //playerScript = GetComponent<Player>();
         playerScript = GetComponentInParent<Player>();
-
+        pauseManager = FindObjectOfType<PauseManager>();
     }
 
     void Update()
     {
+        // We want to avoid shooting if the player is dead
+        if (playerScript == null || playerScript.IsDead)
+        {
+            return;
+        }
+
+        // We want to avoid shooting if the player is in a menu, this is to avoid projectiles from being initialized whilst paused
+        if (pauseManager.IsAnyMenuOpen())
+        {
+            return;
+        }
+
         float effectiveAttackSpeed = weaponAttackSpeed / playerScript.AttackSpeed;
 
         if (playerScript.AutoAimEnabled)
