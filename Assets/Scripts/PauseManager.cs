@@ -46,6 +46,11 @@ public class PauseManager : MonoBehaviour
         }
     }
     
+    public bool IsAnyMenuOpen()
+    {
+        return mainMenuPanel.activeSelf || upgradePanel.activeSelf;
+    }
+    
     private void SwitchToPauseMenu()
     {
         if (upgradePanel != null && upgradePanel.activeSelf)
