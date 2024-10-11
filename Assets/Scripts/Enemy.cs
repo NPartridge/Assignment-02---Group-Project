@@ -12,7 +12,11 @@ public class Enemy : MonoBehaviour
     
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
-    
+    public GameObject bulletPrefab;
+
+    public enum EnemyType { Melee, Ranged }
+    public EnemyType enemyType = EnemyType.Melee;
+
     [Header("Enemy stat sheet")]
     [SerializeField] public float speed = 3f;
     [SerializeField] private int damage = 5;
@@ -52,19 +56,10 @@ public class Enemy : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         float effectiveStopDistance = playerCollider.radius + stopDistance;
 
+        RotateTowardsPlayer();
+
         if (distanceToPlayer > effectiveStopDistance)
         {
-            Vector3 playerDirection = player.position - transform.position;
-            playerDirection.y = 0; // Keep only the horizontal direction
-
-            if (playerDirection != Vector3.zero)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(playerDirection);
-
-                // Rotate towards player
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-            }
-
             // Move forward in the direction the player is facing
             transform.position += transform.forward * (speed * Time.deltaTime);
             animator.SetBool(IsEnemyMoving, true);
@@ -74,13 +69,32 @@ public class Enemy : MonoBehaviour
             // Check if the player is alive before attacking
             if (playerScript.CurrentHealth > 0)
             {
-                // If enemy is close enough to player, attack!
-                Attack();
+                // Check enemy type and choose appropriate attack method
+
+                if (enemyType == EnemyType.Melee)
+                    // If enemy is close enough to player, attack!
+                    MeleeAttack();
+                else if (enemyType == EnemyType.Ranged)
+                    RangedAttack();
             }
         }
     }
-    
-    void Attack()
+
+    private void RotateTowardsPlayer()
+    {
+        Vector3 playerDirection = player.position - transform.position;
+        playerDirection.y = 0; // Keep only the horizontal direction
+
+        if (playerDirection != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(playerDirection);
+
+            // Rotate towards player
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
+    }
+
+    void MeleeAttack()
     {
         // Check if enough time has passed since the last attack, we don't want the enemy to cast the attack animation repeatedly
         if (Time.time >= lastAttackTime + attackSpeed)
@@ -93,6 +107,27 @@ public class Enemy : MonoBehaviour
 
             // damage the player
             DamagePlayer(damage);
+        }
+    }
+
+    void RangedAttack()
+    {
+        if (Time.time >= lastAttackTime + attackSpeed)
+        {
+            // Record the time of this attack
+            lastAttackTime = Time.time;
+
+            // Cast attack animation
+            animator.SetTrigger(AttackAnimationTrigger);
+
+            GameObject bullet = Instantiate(bulletPrefab, transform.position + Vector3.up, transform.rotation);
+            EnemyBulletScript bulletScript = bullet.GetComponent<EnemyBulletScript>();
+
+            if (bulletScript != null)
+            {
+                // Ranged Enemy does not do critical damage
+                bulletScript.SetDamage(damage, false);
+            }
         }
     }
 
