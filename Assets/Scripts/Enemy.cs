@@ -117,8 +117,11 @@ public class Enemy : MonoBehaviour
             // Record the time of this attack
             lastAttackTime = Time.time;
 
+            // Cast attack animation
+            animator.SetTrigger(AttackAnimationTrigger);
+
             GameObject bullet = Instantiate(bulletPrefab, transform.position + Vector3.up, transform.rotation);
-            BulletScript bulletScript = bullet.GetComponent<BulletScript>();
+            EnemyBulletScript bulletScript = bullet.GetComponent<EnemyBulletScript>();
 
             if (bulletScript != null)
             {
