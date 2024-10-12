@@ -41,7 +41,7 @@ public class BulletScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") || other.CompareTag("RangedEnemy"))
         {
             // Get the enemy the bullet collided with
             Enemy enemy = other.gameObject.GetComponent<Enemy>();
