@@ -24,7 +24,8 @@ public class Enemy : MonoBehaviour
     public float attackSpeed = 2f;
     
     public GameObject gemPrefab; // The gem the enemy will drop on death
-    
+    public static int enemiesKilled = 0;
+
     private float lastAttackTime = -Mathf.Infinity;
     private static readonly int IsEnemyMoving = Animator.StringToHash("isMoving");
     private static readonly int AttackAnimationTrigger = Animator.StringToHash("Attack");
@@ -176,6 +177,8 @@ public class Enemy : MonoBehaviour
     {
         IsDead = true;
         animator.SetTrigger(DeathAnimationTrigger);
+
+        enemiesKilled++;
         
         enabled = false; // Disables enemy movement/attack logic etc.
 

@@ -1,12 +1,19 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using TMPro;
 
 public class GameOverManager : MonoBehaviour
 {
     public GameObject gameOverUI;
     private CanvasGroup canvasGroup;
     public float fadeDuration = 2f;
+    
+    public TextMeshProUGUI survivalTimeText;
+    public TextMeshProUGUI enemiesKilledText;
+    public TextMeshProUGUI experienceText;
+    
+    private GameTimer gameTimer;
 
     private void Start()
     {
@@ -14,12 +21,34 @@ public class GameOverManager : MonoBehaviour
         
         canvasGroup.alpha = 0f; // Initially the canvas should be invisible (0 alpha)
         gameOverUI.SetActive(false);
+        
+        gameTimer = FindObjectOfType<GameTimer>();
     }
 
     public void ShowGameOverUI()
     {
         gameOverUI.SetActive(true);
+        Player player = FindObjectOfType<Player>();
+        
+        int experienceCollected = player != null ? player.experience : 0;
+        float survivalTime = gameTimer != null ? gameTimer.GetElapsedTime() : 0f;
+        int enemiesKilled = Enemy.enemiesKilled;
+
+        survivalTimeText.text = "Time survived: " + FormatTime(survivalTime);
+        enemiesKilledText.text = "Enemies killed: " + enemiesKilled;
+        experienceText.text = "Experience Collected: " + experienceCollected;
+        
+        gameTimer.HideTimerUI(); // We disable the actual timer of the game
+        
         StartCoroutine(FadeInUI());
+    }
+    
+    private string FormatTime(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60f);
+        int seconds = Mathf.FloorToInt(time % 60f);
+
+        return $"{minutes:00}:{seconds:00}";
     }
 
     private IEnumerator FadeInUI()
@@ -40,6 +69,11 @@ public class GameOverManager : MonoBehaviour
 
     public void RestartGame()
     {
+        // Reset everything relevant that we need to here
+        Enemy.enemiesKilled = 0;
+        gameTimer.ResetTimer();
+        gameTimer.ShowTimerUI();
+
         // Reset time scale (this is only useful if the game has been paused)
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Refresh the scene
