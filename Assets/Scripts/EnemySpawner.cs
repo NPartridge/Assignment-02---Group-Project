@@ -8,6 +8,12 @@ public class EnemySpawner : MonoBehaviour
     public float spawnInterval = 5f;
     private float enemyTimer;
 
+    [Header("Ranged Enemy Settings")]
+    public GameObject rangedEnemyPrefab;
+    public int maxRangedEnemies = 3;
+    public float rangedSpawnInterval = 10f;
+    private float rangedEnemyTimer;
+
     [Header("Boss Settings")]
     public GameObject bossPrefab;
     public float bossSpawnInterval = 60f;
@@ -15,7 +21,7 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Spawn Settings")]
     public Transform player;
-    
+
     // These are the radii around the player that enemies will spawn under. We don't want enemies spawning either
     // too close or too far away from the player.
     public float maximumSpawnDistance = 30f;
@@ -24,6 +30,7 @@ public class EnemySpawner : MonoBehaviour
     void Update()
     {
         enemyTimer += Time.deltaTime;
+        rangedEnemyTimer += Time.deltaTime;
         bossTimer += Time.deltaTime;
 
         // Spawn regular enemies
@@ -33,6 +40,13 @@ public class EnemySpawner : MonoBehaviour
             SpawnEnemy();
         }
 
+        // Spawn ranged enemies
+        if (rangedEnemyTimer >= rangedSpawnInterval)
+        {
+            rangedEnemyTimer = 0f;
+            SpawnRangedEnemy();
+        }
+
         // Spawn boss enemy
         if (bossTimer >= bossSpawnInterval)
         {
@@ -40,7 +54,7 @@ public class EnemySpawner : MonoBehaviour
             SpawnBoss();
         }
     }
-    
+
     // ReSharper disable Unity.PerformanceAnalysis
     void SpawnEnemy()
     {
@@ -49,6 +63,16 @@ public class EnemySpawner : MonoBehaviour
         {
             Vector3 spawnPosition = GetRandomSpawnPosition();
             Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        }
+    }
+
+    void SpawnRangedEnemy()
+    {
+        // Checks how many ranged enemies we have in the scene
+        if (GameObject.FindGameObjectsWithTag("RangedEnemy").Length < maxRangedEnemies)
+        {
+            Vector3 spawnPosition = GetRandomSpawnPosition();
+            Instantiate(rangedEnemyPrefab, spawnPosition, Quaternion.identity);
         }
     }
 
@@ -65,7 +89,7 @@ public class EnemySpawner : MonoBehaviour
     {
         float minDistance = minSpawnDistance;
         float maxDistance = maximumSpawnDistance;
-        
+
         // A random angle between 0-360 degrees
         float angle = Random.Range(0f, Mathf.PI * 2);
 
