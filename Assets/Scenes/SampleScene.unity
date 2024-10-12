@@ -9406,6 +9406,9 @@ MonoBehaviour:
   enemyPrefab: {fileID: 8791423355743301627, guid: 079db42af01a151418638623bd8e2d40, type: 3}
   maxEnemies: 5
   spawnInterval: 1
+  rangedEnemyPrefab: {fileID: 5554517491301082886, guid: b7f2ad8bd3d732c4b8def6a6945cb5b0, type: 3}
+  maxRangedEnemies: 3
+  rangedSpawnInterval: 10
   bossPrefab: {fileID: 6408897766248347207, guid: 2aa419266b65fe849b000c20d76e7843, type: 3}
   bossSpawnInterval: 60
   player: {fileID: 1776154083}
