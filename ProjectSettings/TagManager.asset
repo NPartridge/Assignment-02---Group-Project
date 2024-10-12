@@ -7,7 +7,6 @@ TagManager:
   - Ground
   - Enemy
   - Bullet
-  - RangedEnemy
   layers:
   - Default
   - TransparentFX
