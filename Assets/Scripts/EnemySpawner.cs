@@ -68,7 +68,7 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnRangedEnemy()
     {
-        // Checks how many ranged enemies we have in the scene
+        // Checks how many enemies we have in the scene
         if (GameObject.FindGameObjectsWithTag("RangedEnemy").Length < maxRangedEnemies)
         {
             Vector3 spawnPosition = GetRandomSpawnPosition();
