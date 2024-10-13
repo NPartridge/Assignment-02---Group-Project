@@ -83,7 +83,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: EnemyAnimatorController
+  m_Name: RakeAnimationController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: isMoving
@@ -143,7 +143,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1827226128182048838, guid: bda8ad7dc6f89b74d89d8becacc9b2bf, type: 3}
+  m_Motion: {fileID: 1827226128182048838, guid: d7d9e21bcb0b8de4293ff71ad2475759, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -170,7 +170,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1827226128182048838, guid: fd63a05197408fe44a5912c158054705, type: 3}
+  m_Motion: {fileID: 1827226128182048838, guid: 6e1e965c7c4cc6c4aa3d7d844aaf7fda, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -221,7 +221,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1827226128182048838, guid: 040d72ca6e0083945a4bada49a27a633, type: 3}
+  m_Motion: {fileID: 1827226128182048838, guid: ac7bfa20481f44c458db5e3e84913de2, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
