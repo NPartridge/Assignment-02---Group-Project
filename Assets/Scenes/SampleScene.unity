@@ -3564,11 +3564,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4850302033122768899, guid: 5e94ec3ba0b726140afe335b2aee1f43, type: 3}
   m_PrefabInstance: {fileID: 1426850546}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &872671322 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4510348980241893111, guid: 4cd89ae8c245e4148b5cf15636617480, type: 3}
-  m_PrefabInstance: {fileID: 1958012804}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &877808709 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4850302033122768899, guid: 5e94ec3ba0b726140afe335b2aee1f43, type: 3}
@@ -8055,29 +8050,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2874203556033925569, guid: 4cd89ae8c245e4148b5cf15636617480, type: 3}
   m_PrefabInstance: {fileID: 1958012804}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &1776154086
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 872671322}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!1 &1777031861
 GameObject:
   m_ObjectHideFlags: 0
@@ -9014,14 +8986,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1341976450925264675, guid: 4cd89ae8c245e4148b5cf15636617480, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589497122788005018, guid: 4cd89ae8c245e4148b5cf15636617480, type: 3}
-      propertyPath: rotationSpeed
-      value: 12
-      objectReference: {fileID: 0}
     - target: {fileID: 2874203556033925569, guid: 4cd89ae8c245e4148b5cf15636617480, type: 3}
       propertyPath: m_RootOrder
       value: 14
@@ -9070,18 +9034,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5299831750754297015, guid: 4cd89ae8c245e4148b5cf15636617480, type: 3}
-      propertyPath: m_Name
-      value: PlayerCollider
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 5299831750754297015, guid: 4cd89ae8c245e4148b5cf15636617480, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4510348980241893111, guid: 4cd89ae8c245e4148b5cf15636617480, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1776154086}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cd89ae8c245e4148b5cf15636617480, type: 3}
 --- !u!1001 &1979055231
 PrefabInstance:
