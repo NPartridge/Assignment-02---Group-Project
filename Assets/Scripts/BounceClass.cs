@@ -7,9 +7,6 @@ public class BounceClass : MonoBehaviour
     public float minBounceHeightVariation = 0.05f;
     public float maxBounceHeightVariation = 0.5f;
 
-    public float minBounceSpeedVariation = 0.2f;
-    public float maxBounceSpeedVariation = 0.3f;
-
     private float bounceHeight = 0.2f;
     private float bounceSpeed = 1f;
     private float bounceOffset = 0.5f; // This is to help the bounce feel less uniform, more info about this in Bounce()

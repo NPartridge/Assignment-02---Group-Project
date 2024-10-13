@@ -1,24 +1,8 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Enemy Settings")]
-    public GameObject enemyPrefab;
-    public int maxEnemies = 5;
-    public float spawnInterval = 5f;
-    private float enemyTimer;
-
-    [Header("Ranged Enemy Settings")]
-    public GameObject rangedEnemyPrefab;
-    public int maxRangedEnemies = 3;
-    public float rangedSpawnInterval = 10f;
-    private float rangedEnemyTimer;
-
-    [Header("Boss Settings")]
-    public GameObject bossPrefab;
-    public float bossSpawnInterval = 60f;
-    private float bossTimer;
-
     [Header("Spawn Settings")]
     public Transform player;
 
@@ -27,62 +11,56 @@ public class EnemySpawner : MonoBehaviour
     public float maximumSpawnDistance = 30f;
     public float minSpawnDistance = 20f;
 
+    [System.Serializable]
+    public class EnemySpawnData
+    {
+        public GameObject enemyPrefab;
+        public int maxEnemies;
+        public float spawnInterval;
+        [HideInInspector]
+        public float spawnTimer;
+        public Enemy.EnemyType enemyType;
+    }
+
+    public List<EnemySpawnData> enemySpawnDataList;
+
     void Update()
     {
-        enemyTimer += Time.deltaTime;
-        rangedEnemyTimer += Time.deltaTime;
-        bossTimer += Time.deltaTime;
-
-        // Spawn regular enemies
-        if (enemyTimer >= spawnInterval)
+        foreach (var data in enemySpawnDataList)
         {
-            enemyTimer = 0f;
-            SpawnEnemy();
-        }
-
-        // Spawn ranged enemies
-        if (rangedEnemyTimer >= rangedSpawnInterval)
-        {
-            rangedEnemyTimer = 0f;
-            SpawnRangedEnemy();
-        }
-
-        // Spawn boss enemy
-        if (bossTimer >= bossSpawnInterval)
-        {
-            bossTimer = 0f;
-            SpawnBoss();
+            data.spawnTimer += Time.deltaTime;
+            if (data.spawnTimer >= data.spawnInterval)
+            {
+                data.spawnTimer = 0f;
+                SpawnEnemy(data);
+            }
         }
     }
 
-    // ReSharper disable Unity.PerformanceAnalysis
-    void SpawnEnemy()
+    void SpawnEnemy(EnemySpawnData data)
     {
-        // Checks how many enemies we have in the scene
-        if (GameObject.FindGameObjectsWithTag("Enemy").Length < maxEnemies)
+        if (CountEnemiesOfType(data.enemyType) < data.maxEnemies)
         {
             Vector3 spawnPosition = GetRandomSpawnPosition();
-            Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+            GameObject enemyObj = Instantiate(data.enemyPrefab, spawnPosition, Quaternion.identity);
+            Enemy enemy = enemyObj.GetComponent<Enemy>();
+            enemy.enemyType = data.enemyType;
         }
     }
 
-    void SpawnRangedEnemy()
+    int CountEnemiesOfType(Enemy.EnemyType type)
     {
-        // Checks how many ranged enemies we have in the scene
-        if (GameObject.FindGameObjectsWithTag("RangedEnemy").Length < maxRangedEnemies)
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        int count = 0;
+        foreach (GameObject enemyObj in enemies)
         {
-            Vector3 spawnPosition = GetRandomSpawnPosition();
-            Instantiate(rangedEnemyPrefab, spawnPosition, Quaternion.identity);
+            Enemy enemy = enemyObj.GetComponent<Enemy>();
+            if (enemy != null && enemy.enemyType == type)
+            {
+                count++;
+            }
         }
-    }
-
-    // Currently bosses will spawn repeatedly which looks quite odd if the spawn timer is low but this will make more
-    // sense if the spawner timer is higher e.g. every 60 seconds or more
-    void SpawnBoss()
-    {
-        Vector3 spawnPosition = GetRandomSpawnPosition();
-        Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
-        //Debug.Log("Boss incoming!!");
+        return count;
     }
 
     Vector3 GetRandomSpawnPosition()
