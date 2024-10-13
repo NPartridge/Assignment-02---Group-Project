@@ -196,7 +196,7 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(3f);
         
         // Drop a gem when the enemy dies. Move this line before WaitForSeconds() if we want the gems to spawn as soon as the enemy dies
-        Instantiate(gemPrefab, transform.position, Quaternion.identity);
+        Instantiate(gemPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
         
         Destroy(gameObject);
     }
