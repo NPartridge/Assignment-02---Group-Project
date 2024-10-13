@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     public float rotationSpeed = 5f;
     public GameObject bulletPrefab;
 
-    public enum EnemyType { Melee, Ranged }
+    public enum EnemyType { Melee, Ranged, Boss, Elite }
     public EnemyType enemyType = EnemyType.Melee;
 
     [Header("Enemy stat sheet")]
@@ -22,7 +22,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int damage = 5;
     public int health = 100;
     public float attackSpeed = 2f;
-    
     public GameObject gemPrefab; // The gem the enemy will drop on death
     public static int enemiesKilled = 0;
 
@@ -71,7 +70,6 @@ public class Enemy : MonoBehaviour
             if (playerScript.CurrentHealth > 0)
             {
                 // Check enemy type and choose appropriate attack method
-
                 if (enemyType == EnemyType.Melee)
                     // If enemy is close enough to player, attack!
                     MeleeAttack();
@@ -130,6 +128,11 @@ public class Enemy : MonoBehaviour
                 bulletScript.SetDamage(damage, false);
             }
         }
+    }
+
+    void BossAttack()
+    {
+        
     }
 
     void DamagePlayer(int amount)

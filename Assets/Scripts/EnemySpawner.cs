@@ -16,6 +16,7 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Boss Settings")]
     public GameObject bossPrefab;
+    public int maxBosses = 1;
     public float bossSpawnInterval = 60f;
     private float bossTimer;
 
@@ -37,7 +38,7 @@ public class EnemySpawner : MonoBehaviour
         if (enemyTimer >= spawnInterval)
         {
             enemyTimer = 0f;
-            SpawnEnemy();
+            SpawnMeleeEnemy();
         }
 
         // Spawn ranged enemies
@@ -54,35 +55,54 @@ public class EnemySpawner : MonoBehaviour
             SpawnBoss();
         }
     }
-
-    // ReSharper disable Unity.PerformanceAnalysis
-    void SpawnEnemy()
+    
+    int CountEnemiesOfType(Enemy.EnemyType type)
     {
-        // Checks how many enemies we have in the scene
-        if (GameObject.FindGameObjectsWithTag("Enemy").Length < maxEnemies)
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        int count = 0;
+        foreach (GameObject enemyObj in enemies)
+        {
+            Enemy enemy = enemyObj.GetComponent<Enemy>();
+            if (enemy != null && enemy.enemyType == type)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    void SpawnMeleeEnemy()
+    {
+        if (CountEnemiesOfType(Enemy.EnemyType.Melee) < maxEnemies)
         {
             Vector3 spawnPosition = GetRandomSpawnPosition();
-            Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+            GameObject enemyObj = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+            Enemy enemy = enemyObj.GetComponent<Enemy>();
+            enemy.enemyType = Enemy.EnemyType.Melee;
         }
     }
 
     void SpawnRangedEnemy()
     {
-        // Checks how many ranged enemies we have in the scene
-        if (GameObject.FindGameObjectsWithTag("RangedEnemy").Length < maxRangedEnemies)
+        if (CountEnemiesOfType(Enemy.EnemyType.Ranged) < maxRangedEnemies)
         {
             Vector3 spawnPosition = GetRandomSpawnPosition();
-            Instantiate(rangedEnemyPrefab, spawnPosition, Quaternion.identity);
+            GameObject enemyObj = Instantiate(rangedEnemyPrefab, spawnPosition, Quaternion.identity);
+            Enemy enemy = enemyObj.GetComponent<Enemy>();
+            enemy.enemyType = Enemy.EnemyType.Ranged;
         }
     }
-
-    // Currently bosses will spawn repeatedly which looks quite odd if the spawn timer is low but this will make more
-    // sense if the spawner timer is higher e.g. every 60 seconds or more
+    
     void SpawnBoss()
     {
-        Vector3 spawnPosition = GetRandomSpawnPosition();
-        Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
-        //Debug.Log("Boss incoming!!");
+        if (CountEnemiesOfType(Enemy.EnemyType.Boss) < maxBosses)
+        {
+            Vector3 spawnPosition = GetRandomSpawnPosition();
+            GameObject bossObj = Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
+            Enemy enemy = bossObj.GetComponent<Enemy>();
+            enemy.enemyType = Enemy.EnemyType.Boss;
+            // Debug.Log("Boss incoming!!");
+        }
     }
 
     Vector3 GetRandomSpawnPosition()
