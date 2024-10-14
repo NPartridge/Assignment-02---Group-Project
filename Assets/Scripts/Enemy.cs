@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class Enemy : MonoBehaviour
     private CapsuleCollider playerCollider;
     private CapsuleCollider enemyCollider;
     private Animator animator;
+    private NavMeshAgent navMeshAgent;
     
     public float stopDistance = 1f; // Distance that the enemy will stop moving towards the player (prevent player/enemy merging)
     public float rotationSpeed = 5f;
@@ -41,55 +43,50 @@ public class Enemy : MonoBehaviour
         enemyCollider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
         playerScript = player.GetComponent<Player>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        
+        navMeshAgent.stoppingDistance = stopDistance;
+        navMeshAgent.speed = speed;
+        navMeshAgent.radius = enemyCollider.radius;
+        navMeshAgent.avoidancePriority = Random.Range(0, 100); // How much the enemy will avoid other enemies
     }
 
     void Update()
     {
-        if (player != null)
+        if (player != null && !IsDead)
         {
-            MoveTowardsPlayer();
-        }
-    }
-
-    void MoveTowardsPlayer()
-    {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        float effectiveStopDistance = playerCollider.radius + stopDistance;
-
-        RotateTowardsPlayer();
-
-        if (distanceToPlayer > effectiveStopDistance)
-        {
-            // Move forward in the direction the player is facing
-            transform.position += transform.forward * (speed * Time.deltaTime);
-            animator.SetBool(IsEnemyMoving, true);
-        }
-        else
-        {
-            // Check if the player is alive before attacking
-            if (playerScript.CurrentHealth > 0)
+            // The agents destination is the player
+            navMeshAgent.SetDestination(player.position);
+            animator.SetBool(IsEnemyMoving, navMeshAgent.velocity.sqrMagnitude > 0.1f);
+            
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            
+            // Here we are checking if the agent has reached their stopping distance
+            if (distanceToPlayer <= navMeshAgent.stoppingDistance + 0.1f)
             {
-                // Check enemy type and choose appropriate attack method
-                if (enemyType == EnemyType.Melee)
-                    // If enemy is close enough to player, attack!
-                    MeleeAttack();
-                else if (enemyType == EnemyType.Ranged)
-                    RangedAttack();
+                RotateTowardsPlayer();
+
+                if (playerScript.CurrentHealth > 0)
+                {
+                    if (enemyType == EnemyType.Melee)
+                        MeleeAttack();
+                    else if (enemyType == EnemyType.Ranged)
+                        RangedAttack();
+                }
             }
         }
     }
 
     private void RotateTowardsPlayer()
     {
-        Vector3 playerDirection = player.position - transform.position;
-        playerDirection.y = 0; // Keep only the horizontal direction
+        Vector3 direction = (player.position - transform.position).normalized;
+        direction.y = 0f; // Keep only the horizontal direction
 
-        if (playerDirection != Vector3.zero)
+        if (direction != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(playerDirection);
-
             // Rotate towards player
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
         }
     }
 
@@ -157,7 +154,9 @@ public class Enemy : MonoBehaviour
     
     private void ShowDamageNumber(int damage, bool isCritical)
     {
-        // Raising the position slightly higher so the number starts somewhere around the enemies head
+        // Raising the position slightly higher so the number starts somewhere around the enemies head. The damage numbers
+        // don't work perfectly with larger enemies like bosses. This could be refactored so each enemy has its own
+        // damage number position but this is probably unnecessary for now
         GameObject dmgNumber = Instantiate(damageNumberPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
         
         dmgNumber.transform.SetParent(transform);
@@ -186,6 +185,7 @@ public class Enemy : MonoBehaviour
         enabled = false; // Disables enemy movement/attack logic etc.
 
         enemyCollider.enabled = false; // Disables the collider so the player can't shoot at dead enemies
+        navMeshAgent.enabled = false; // Disables the nav mesh so the enemies don't move after they're dead
 
         // Wait until animation is done before destroying the enemy
         StartCoroutine(WaitForDeathAnimation());
