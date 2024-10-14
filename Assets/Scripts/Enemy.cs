@@ -49,6 +49,7 @@ public class Enemy : MonoBehaviour
         navMeshAgent.speed = speed;
         navMeshAgent.radius = enemyCollider.radius;
         navMeshAgent.avoidancePriority = Random.Range(0, 100); // How much the enemy will avoid other enemies
+
     }
 
     void Update()
@@ -116,7 +117,13 @@ public class Enemy : MonoBehaviour
             // Cast attack animation
             animator.SetTrigger(AttackAnimationTrigger);
 
-            GameObject bullet = Instantiate(bulletPrefab, transform.position + Vector3.up, transform.rotation);
+            GameObject firingPoint = GameObject.Find("FiringPoint");
+            if (firingPoint == null)
+            {
+                Debug.Log("No Firing Point");
+            }
+
+            GameObject bullet = Instantiate(bulletPrefab, firingPoint.transform.position, firingPoint.transform.rotation);
             EnemyBulletScript bulletScript = bullet.GetComponent<EnemyBulletScript>();
 
             if (bulletScript != null)
