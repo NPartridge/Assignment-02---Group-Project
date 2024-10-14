@@ -36,6 +36,8 @@ public class Enemy : MonoBehaviour
     
     public bool IsDead { get; private set; }
 
+    public Transform firingPoint;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -117,13 +119,12 @@ public class Enemy : MonoBehaviour
             // Cast attack animation
             animator.SetTrigger(AttackAnimationTrigger);
 
-            GameObject firingPoint = GameObject.Find("FiringPoint");
             if (firingPoint == null)
             {
                 Debug.Log("No Firing Point");
             }
 
-            GameObject bullet = Instantiate(bulletPrefab, firingPoint.transform.position, firingPoint.transform.rotation);
+            GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
             EnemyBulletScript bulletScript = bullet.GetComponent<EnemyBulletScript>();
 
             if (bulletScript != null)

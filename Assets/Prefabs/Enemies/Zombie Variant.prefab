@@ -41,7 +41,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8bcf3c5d69670074bab2948f4401ec74, type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bcf3c5d69670074bab2948f4401ec74, type: 3}
       propertyPath: m_LocalPosition.x
@@ -167,6 +167,7 @@ MonoBehaviour:
   attackSpeed: 2.3
   gemPrefab: {fileID: 3564743645360956725, guid: 5e94ec3ba0b726140afe335b2aee1f43, type: 3}
   damageNumberPrefab: {fileID: 4775476507757662158, guid: e1eb92d2126d94440b7c56c74dfe3d2b, type: 3}
+  firingPoint: {fileID: 1728728497379415992}
 --- !u!195 &8142427921446429960
 NavMeshAgent:
   m_ObjectHideFlags: 0
