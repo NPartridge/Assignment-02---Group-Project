@@ -36,6 +36,8 @@ public class Enemy : MonoBehaviour
     
     public bool IsDead { get; private set; }
 
+    public Transform firingPoint;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -49,6 +51,7 @@ public class Enemy : MonoBehaviour
         navMeshAgent.speed = speed;
         navMeshAgent.radius = enemyCollider.radius;
         navMeshAgent.avoidancePriority = Random.Range(0, 100); // How much the enemy will avoid other enemies
+
     }
 
     void Update()
@@ -116,7 +119,12 @@ public class Enemy : MonoBehaviour
             // Cast attack animation
             animator.SetTrigger(AttackAnimationTrigger);
 
-            GameObject bullet = Instantiate(bulletPrefab, transform.position + Vector3.up, transform.rotation);
+            if (firingPoint == null)
+            {
+                Debug.Log("No Firing Point");
+            }
+
+            GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
             EnemyBulletScript bulletScript = bullet.GetComponent<EnemyBulletScript>();
 
             if (bulletScript != null)
