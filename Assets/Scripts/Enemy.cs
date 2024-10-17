@@ -124,6 +124,12 @@ public class Enemy : MonoBehaviour
                 Debug.Log("No Firing Point");
             }
 
+            // Get the rotation towards the player
+            Vector3 playerDirection = (player.position - transform.position).normalized;
+            Quaternion rotation = Quaternion.LookRotation(playerDirection);
+            // rotate the firing point using that rotation
+            firingPoint.rotation = rotation;
+
             GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
             EnemyBulletScript bulletScript = bullet.GetComponent<EnemyBulletScript>();
 
