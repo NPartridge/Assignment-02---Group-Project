@@ -1,7 +1,6 @@
-
 using System;
 using System.Collections;
-
+using System.Collections.Generic;
 using UnityEngine;
 
 // Information to help rotate to mouse position found here: https://discussions.unity.com/t/rotate-towards-mouse-position/883950
@@ -95,10 +94,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // We don't want to update the player is they are dead
+        // We don't want to update the player if they are dead
         if (!isDead)
         {
-            // We don't want to update the player is there is a menu open
+            // We don't want to update the player if there is a menu open
             if (!pauseManager.IsAnyMenuOpen())
             {
                 MovePlayer();
@@ -138,7 +137,7 @@ public class Player : MonoBehaviour
     {
         if (AutoAimEnabled)
         {
-            RotateTowardsNearestEnemy();
+            RotateTowardsNearestTarget();
         }
         else
         {
@@ -146,19 +145,19 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void RotateTowardsNearestEnemy()
+    private void RotateTowardsNearestTarget()
     {
-        GameObject nearestEnemy = FindNearestEnemy();
+        GameObject nearestTarget = FindNearestTarget();
 
-        if (nearestEnemy != null)
+        if (nearestTarget != null)
         {
-            Vector3 enemyDirection = nearestEnemy.transform.position - transform.position;
-            enemyDirection.y = 0; // Keep only the horizontal direction
+            Vector3 targetDirection = nearestTarget.transform.position - transform.position;
+            targetDirection.y = 0; // Keep only the horizontal direction
             
-            // Calculate the rotation needed to face the enemy
-            Quaternion targetRotation = Quaternion.LookRotation(enemyDirection);
+            // Calculate the rotation needed to face the target
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
 
-            // Rotates towards enemy
+            // Rotates towards target
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
     }
@@ -191,30 +190,36 @@ public class Player : MonoBehaviour
         }
     }
 
-    private GameObject FindNearestEnemy()
+    private GameObject FindNearestTarget()
     {
+        // Our current targets are enemies and barrels
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        GameObject nearestEnemy = null;
+        GameObject[] crates = GameObject.FindGameObjectsWithTag("Barrel");
+        
+        List<GameObject> potentialTargets = new List<GameObject>();
+        potentialTargets.AddRange(enemies);
+        potentialTargets.AddRange(crates);
+
+        GameObject nearestTarget = null;
         float minDistance = Mathf.Infinity; // https://docs.unity3d.com/ScriptReference/Mathf.Infinity.html
         
-        // Go through all the enemies and find the closest one
-        foreach (GameObject enemy in enemies)
+        foreach (GameObject target in potentialTargets)
         {
-            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            Enemy enemyScript = target.GetComponent<Enemy>();
             
-            // We want to avoid targeting enemies that are dead
-            if (enemyScript == null || enemyScript.IsDead)
+            // For enemies, we want to avoid targeting enemies that are dead
+            if (enemyScript != null && enemyScript.IsDead)
                 continue;
             
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            float distance = Vector3.Distance(transform.position, target.transform.position);
             if (distance < minDistance)
             {
                 minDistance = distance;
-                nearestEnemy = enemy;
+                nearestTarget = target;
             }
         }
 
-        return nearestEnemy;
+        return nearestTarget;
     }
     
     public void AddExperience(int amount)
