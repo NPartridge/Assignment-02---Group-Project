@@ -152,12 +152,8 @@ public class Player : MonoBehaviour
         if (nearestTarget != null)
         {
             Vector3 targetDirection = nearestTarget.transform.position - transform.position;
-            targetDirection.y = 0; // Keep only the horizontal direction
-            
-            // Calculate the rotation needed to face the target
-            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
 
-            // Rotates towards target
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
     }
@@ -168,8 +164,7 @@ public class Player : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            // Only interested in position of mouse on x,z axes, keep player rotation on y axis
-            Vector3 targetPoint = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+            Vector3 targetPoint = hit.point;
             Vector3 direction = targetPoint - transform.position;
 
             if (direction != Vector3.zero)
@@ -189,7 +184,9 @@ public class Player : MonoBehaviour
             Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "enabled" : "disabled"));
         }
     }
-
+    
+    private GameObject currentTarget;
+    
     private GameObject FindNearestTarget()
     {
         // Our current targets are enemies and barrels
@@ -219,9 +216,13 @@ public class Player : MonoBehaviour
             }
         }
 
+        currentTarget = nearestTarget;
         return nearestTarget;
     }
     
+    // We need this in the weapon script for aiming at targets
+    public GameObject CurrentTarget => currentTarget;
+
     public void AddExperience(int amount)
     {
         experience += amount;

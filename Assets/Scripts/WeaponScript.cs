@@ -90,5 +90,24 @@ public class WeaponScript : MonoBehaviour
         {
             bulletScript.SetDamage(totalDamage, isCritical);
         }
+
+        if (playerScript.AutoAimEnabled)
+        {
+            // We get the current target from the player
+            GameObject target = playerScript.CurrentTarget;
+
+            if (target != null)
+            {
+                // Direction between weapon firing point and target
+                Vector3 direction = (target.transform.position - weaponFiringPoint.position).normalized;
+                // Send our bullet in that direction
+                bullet.transform.rotation = Quaternion.LookRotation(direction);
+            }
+        }
+        else
+        {
+            // We were are manually aiming here so we set the bullets rotation to match the weapon firing point rotation
+            bullet.transform.rotation = weaponFiringPoint.rotation;
+        }
     }
 }
