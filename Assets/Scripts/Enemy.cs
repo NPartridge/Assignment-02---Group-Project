@@ -37,6 +37,7 @@ public class Enemy : MonoBehaviour
     public bool IsDead { get; private set; }
 
     public Transform firingPoint;
+    public GameObject gunPrefab;
 
     void Start()
     {
@@ -129,6 +130,9 @@ public class Enemy : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(playerDirection);
             // rotate the firing point using that rotation
             firingPoint.rotation = rotation;
+            // change the local rotation of the gun model on the x axis only
+            Quaternion gunRotation = Quaternion.Euler(firingPoint.rotation.x, gunPrefab.transform.rotation.y, gunPrefab.transform.rotation.z);
+            gunPrefab.transform.localRotation = gunRotation;
 
             GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
             EnemyBulletScript bulletScript = bullet.GetComponent<EnemyBulletScript>();
