@@ -29,7 +29,13 @@ public class EnemyBulletScript : MonoBehaviour
 
         if (bulletDistance > maxDistance)
         {
+            // In the case of a bullet spray, destroy the parent container of the bullets.
+            if(transform.parent != null)
+            {
+                Destroy(transform.parent.gameObject);
+            }
             Destroy(gameObject);
+            
         }
     }
     
@@ -41,6 +47,7 @@ public class EnemyBulletScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        
         if (other.CompareTag("Player"))
         {
             // Get the enemy the bullet collided with
