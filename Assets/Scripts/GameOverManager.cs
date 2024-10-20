@@ -15,6 +15,8 @@ public class GameOverManager : MonoBehaviour
     
     private GameTimer gameTimer;
 
+    private MusicPlayer musicPlayer;
+
     private void Start()
     {
         canvasGroup = gameOverUI.GetComponent<CanvasGroup>();
@@ -23,11 +25,21 @@ public class GameOverManager : MonoBehaviour
         gameOverUI.SetActive(false);
         
         gameTimer = FindObjectOfType<GameTimer>();
+
+        musicPlayer = GameObject.FindGameObjectWithTag("MusicPlayer").GetComponent<MusicPlayer>();
+        if (musicPlayer == null)
+        {
+            Debug.Log("Music Player is NULL");
+        }
     }
 
     public void ShowGameOverUI()
     {
         gameOverUI.SetActive(true);
+
+        Debug.Log("Play Game Over Music");
+        musicPlayer.PlayGameOverMusic();
+
         Player player = FindObjectOfType<Player>();
         
         int experienceCollected = player != null ? player.experience : 0;
