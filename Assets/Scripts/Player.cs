@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float attackSpeed = 1f;
     
     [SerializeField] private int basePlayerDamage = 0;
+    [SerializeField] private float range = 20f;
     //private int flatPlayerDamageIncrease = 0;
 
     // We need attack speed, crit chance, and crit multi, and a check for if the player is alive in the weapon script
@@ -191,7 +192,7 @@ public class Player : MonoBehaviour
     {
         // Our current targets are enemies and barrels
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        GameObject[] crates = GameObject.FindGameObjectsWithTag("Barrel");
+        GameObject[] crates = GameObject.FindGameObjectsWithTag("Destructible");
         
         List<GameObject> potentialTargets = new List<GameObject>();
         potentialTargets.AddRange(enemies);
@@ -203,12 +204,24 @@ public class Player : MonoBehaviour
         foreach (GameObject target in potentialTargets)
         {
             Enemy enemyScript = target.GetComponent<Enemy>();
+            DestructibleObject destructibleScript = target.GetComponent<DestructibleObject>();
             
             // For enemies, we want to avoid targeting enemies that are dead
             if (enemyScript != null && enemyScript.IsDead)
                 continue;
             
+            if (destructibleScript != null && !destructibleScript.IsActive)
+                continue;
+            
             float distance = Vector3.Distance(transform.position, target.transform.position);
+            
+            // For destructibles, we only want to shoot and destructibles that are within the range of the player
+            if (destructibleScript != null)
+            {
+                if (distance > range)
+                    continue;
+            }
+            
             if (distance < minDistance)
             {
                 minDistance = distance;
