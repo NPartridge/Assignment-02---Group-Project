@@ -156,9 +156,7 @@ public class UpgradeManager : MonoBehaviour
             case UpgradeType.Damage:
                 player.UpgradeDamage(8);
                 break;
-            
         }
-
         Debug.Log("Player upgraded their " + upgrade);
     }
 

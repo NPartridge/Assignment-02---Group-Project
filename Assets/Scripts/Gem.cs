@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Gem : MonoBehaviour
 {
+    [SerializeField] SoundEffect soundEffect;
+    private AudioSource audioSource;
     public enum GemType { Experience, Vacuum }
     public GemType gemType = GemType.Experience;
 
@@ -16,7 +18,7 @@ public class Gem : MonoBehaviour
 
     void Start()
     {
-
+        audioSource = GetComponent<AudioSource>();
         currentMoveSpeed = moveSpeed;
 
         // Find the player in the scene and get the player position/script
@@ -82,9 +84,11 @@ public class Gem : MonoBehaviour
             {
                 // Once the vacuum is close enough, suck in all the gems
                 ActivateVacuum();
+                
+                audioSource.PlayOneShot(soundEffect.VacuumGemCollect);
 
-                // Destroy the vacuum
-                Destroy(gameObject);
+                // Destroy the vacuum after a delay for sound effect
+                Destroy(gameObject, 0.3f);
             }
         }
     }

@@ -6,6 +6,8 @@ using UnityEngine;
 // Information to help rotate to mouse position found here: https://discussions.unity.com/t/rotate-towards-mouse-position/883950
 public class Player : MonoBehaviour
 {
+    [SerializeField] SoundEffect soundEffect;
+
     [Header("Player stat sheet")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
@@ -59,6 +61,9 @@ public class Player : MonoBehaviour
 
             if (currentHealth <= 0)
             {
+                // Play player death sound FX
+                audioSource.PlayOneShot(soundEffect.PlayerDie);
+
                 // Tell the animator that the player is dead, show death animation, display game over screen
                 animator.SetBool("isDead", true);
                 animator.SetTrigger("die");
@@ -77,6 +82,8 @@ public class Player : MonoBehaviour
     private Animator animator;
     private bool isDead = false;
 
+    private AudioSource audioSource;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
@@ -91,6 +98,8 @@ public class Player : MonoBehaviour
         
         CurrentHealth = MaximumHealth; // Init current health to max HP on start
         animator = GetComponent<Animator>();
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -238,6 +247,7 @@ public class Player : MonoBehaviour
 
     public void AddExperience(int amount)
     {
+        audioSource.PlayOneShot(soundEffect.ExperienceGemCollect);
         experience += amount;
         //Debug.Log("Player received: " + amount + " experience. Total player experience: " + experience);
         CheckLevelUp();
@@ -254,6 +264,10 @@ public class Player : MonoBehaviour
         // This loop is to help handle multiple level-ups when the experience is greater than one levelup threshold
         while (experience >= CalculateTotalExperienceForLevel(level + 1))
         {
+            // Play level up sound effect with slight delay to allow for xp gem sound effects
+            audioSource.clip = soundEffect.LevelUp;
+            audioSource.PlayDelayed(0.3f);
+
             level++;
             Debug.Log("Player leveled up to level " + level + "!");
             

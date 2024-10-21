@@ -12,6 +12,7 @@ public class EnemyBulletScript : MonoBehaviour
     void Start()
     {
         startPosition = transform.position;
+
     }
 
     void Update()
@@ -47,7 +48,6 @@ public class EnemyBulletScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
         if (other.CompareTag("Player"))
         {
             // Get the enemy the bullet collided with
@@ -55,6 +55,7 @@ public class EnemyBulletScript : MonoBehaviour
 
             if (player != null)
             {
+                
                 player.CurrentHealth -= damage;
             }
 

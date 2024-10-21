@@ -5,6 +5,9 @@ using UnityEngine.AI;
 
 public class DestructibleObject : MonoBehaviour
 {
+    [SerializeField] SoundEffect soundEffect;
+    private AudioSource audioSource;
+
     // List of items dropped from the object
     public List<GameObject> dropTable;
     
@@ -23,12 +26,17 @@ public class DestructibleObject : MonoBehaviour
         navObstacle = GetComponent<NavMeshObstacle>();
         
         IsActive = true;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Bullet"))
         {
+            // Play collectible BarrelBreak sound effect
+            audioSource.PlayOneShot(soundEffect.BarrelBreak);
+
             // spawn an item
             SpawnRandomDrop();
             // destroy the bullet

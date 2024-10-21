@@ -25,20 +25,11 @@ public class GameOverManager : MonoBehaviour
         gameOverUI.SetActive(false);
         
         gameTimer = FindObjectOfType<GameTimer>();
-
-        musicPlayer = GameObject.FindGameObjectWithTag("MusicPlayer").GetComponent<MusicPlayer>();
-        if (musicPlayer == null)
-        {
-            Debug.Log("Music Player is NULL");
-        }
     }
 
     public void ShowGameOverUI()
     {
         gameOverUI.SetActive(true);
-
-        Debug.Log("Play Game Over Music");
-        musicPlayer.PlayGameOverMusic();
 
         Player player = FindObjectOfType<Player>();
         
