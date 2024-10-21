@@ -34,7 +34,11 @@ public class Player : MonoBehaviour
     
     [Header("Levelling System")]
     public int level = 1;
-    public int experienceToNextLevel = 0;
+    public int TotalExperienceForCurrentLevel => CalculateTotalExperienceForLevel(level);
+    public int TotalExperienceForNextLevel => CalculateTotalExperienceForLevel(level + 1);
+    public int ExperienceRequiredForNextLevel => TotalExperienceForNextLevel - TotalExperienceForCurrentLevel;
+    public int ExperienceIntoCurrentLevel => experience - TotalExperienceForCurrentLevel;
+    public event Action OnExperienceChanged;
     
     public int MaximumHealth
     {
@@ -241,6 +245,7 @@ public class Player : MonoBehaviour
         experience += amount;
         //Debug.Log("Player received: " + amount + " experience. Total player experience: " + experience);
         CheckLevelUp();
+        OnExperienceChanged?.Invoke();
     }
     
     // Currently levelling up is based on a quadratic formula (the change in the change of our y is constant)
@@ -255,18 +260,17 @@ public class Player : MonoBehaviour
         while (experience >= CalculateTotalExperienceForLevel(level + 1))
         {
             level++;
-            Debug.Log("Player leveled up to level " + level + "!");
-            
             if (upgradeManager != null)
             {
                 upgradeManager.ShowUpgradeOptions(this);
             }
         }
         
-        experienceToNextLevel = CalculateTotalExperienceForLevel(level + 1);
+        //experienceToNextLevel = CalculateTotalExperienceForLevel(level + 1);
+        OnExperienceChanged?.Invoke();
     }
 
-    private int CalculateTotalExperienceForLevel(int targetLevel)
+    public int CalculateTotalExperienceForLevel(int targetLevel)
     {
         int baseXP = 100;
         return baseXP * (targetLevel - 1) * (targetLevel - 1);

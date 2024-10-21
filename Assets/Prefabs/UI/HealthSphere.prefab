@@ -163,6 +163,7 @@ GameObject:
   - component: {fileID: 22468254}
   - component: {fileID: 22280556}
   - component: {fileID: 11465174}
+  - component: {fileID: 11467832}
   m_Layer: 5
   m_Name: HealthSphere
   m_TagString: Untagged
@@ -229,6 +230,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &11467832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eead925cff7c471ea42c39db6670cea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  filler: {fileID: 11436602}
+  text: {fileID: 0}
 --- !u!1 &194576
 GameObject:
   m_ObjectHideFlags: 0

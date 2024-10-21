@@ -16,7 +16,6 @@ public class Gem : MonoBehaviour
 
     void Start()
     {
-
         currentMoveSpeed = moveSpeed;
 
         // Find the player in the scene and get the player position/script
