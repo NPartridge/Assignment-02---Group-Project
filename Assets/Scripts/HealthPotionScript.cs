@@ -27,7 +27,7 @@ public class HealthPotionScript : MonoBehaviour
             // restore player health
             other.GetComponent<Player>().CurrentHealth += healthRestoreValue;
             // destroy the potion after short delay for sound effect to play
-            Destroy(gameObject, 0.3f);
+            Destroy(gameObject, 0.5f);
         }
     }
 
