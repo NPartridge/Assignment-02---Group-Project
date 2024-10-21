@@ -118,7 +118,6 @@ public class Enemy : MonoBehaviour
 
     void RangedAttack()
     {
-
         if (Time.time >= lastAttackTime + attackSpeed)
         {
             // Play enemy RangedAttack sound effect
@@ -166,10 +165,7 @@ public class Enemy : MonoBehaviour
                     // Ranged Enemy does not do critical damage
                     bulletScript.SetDamage(damage, false);
                 }
-
             }
-
-
         }
     }
 

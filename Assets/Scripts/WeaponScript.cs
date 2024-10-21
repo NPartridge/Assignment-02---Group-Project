@@ -29,7 +29,6 @@ public class WeaponScript : MonoBehaviour
         pauseManager = FindObjectOfType<PauseManager>();
 
         audioSource = GetComponent<AudioSource>();
-
     }
 
     void Update()

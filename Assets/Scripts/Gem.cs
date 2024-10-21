@@ -82,7 +82,6 @@ public class Gem : MonoBehaviour
             }
             else if (gemType == GemType.Vacuum)
             {
-                
                 // Once the vacuum is close enough, suck in all the gems
                 ActivateVacuum();
                 

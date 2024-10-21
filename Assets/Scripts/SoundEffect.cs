@@ -46,12 +46,10 @@ public class SoundEffect : MonoBehaviour
     public AudioClip SpeedPotion { get => speedPotion; }
     public AudioClip ExperienceGemCollect { get => experienceGemCollect; }
     public AudioClip VacuumGemCollect { get => vacuumGemCollect; }
-
-
+    
     // Event Sound FX
     public AudioClip LevelUp { get => levelUp;}
-
-
+    
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();

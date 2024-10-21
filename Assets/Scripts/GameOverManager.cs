@@ -25,7 +25,6 @@ public class GameOverManager : MonoBehaviour
         gameOverUI.SetActive(false);
         
         gameTimer = FindObjectOfType<GameTimer>();
-
     }
 
     public void ShowGameOverUI()

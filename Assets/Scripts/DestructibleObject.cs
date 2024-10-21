@@ -32,8 +32,6 @@ public class DestructibleObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
-
         if (other.CompareTag("Bullet"))
         {
             // Play collectible BarrelBreak sound effect

@@ -18,8 +18,7 @@ public class HealthPotionScript : MonoBehaviour
     {
         bounceClass.Bounce();
     }
-
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

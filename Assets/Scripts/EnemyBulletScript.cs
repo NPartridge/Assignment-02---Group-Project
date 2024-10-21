@@ -48,10 +48,8 @@ public class EnemyBulletScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
         if (other.CompareTag("Player"))
         {
-            
             // Get the enemy the bullet collided with
             Player player = other.gameObject.GetComponent<Player>();
 
