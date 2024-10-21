@@ -4,6 +4,9 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] SoundEffect soundEffect;
+    private AudioSource audioSource;
+
     private Player playerScript;
     private Transform player;
     private CapsuleCollider playerCollider;
@@ -38,6 +41,7 @@ public class Enemy : MonoBehaviour
     public Transform firingPoint;
     public GameObject gunPrefab;
 
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -52,6 +56,7 @@ public class Enemy : MonoBehaviour
         navMeshAgent.radius = enemyCollider.radius;
         navMeshAgent.avoidancePriority = Random.Range(0, 100); // How much the enemy will avoid other enemies
 
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -98,6 +103,8 @@ public class Enemy : MonoBehaviour
         // Check if enough time has passed since the last attack, we don't want the enemy to cast the attack animation repeatedly
         if (Time.time >= lastAttackTime + attackSpeed)
         {
+            // Play enemy MeleeAttack sound effect
+            audioSource.PlayOneShot(soundEffect.MeleeAttack);
             // Record the time of this attack
             lastAttackTime = Time.time;
 
@@ -114,6 +121,9 @@ public class Enemy : MonoBehaviour
 
         if (Time.time >= lastAttackTime + attackSpeed)
         {
+            // Play enemy RangedAttack sound effect
+            audioSource.PlayOneShot(soundEffect.RangedAttack);
+
             // Record the time of this attack
             lastAttackTime = Time.time;
 
@@ -170,6 +180,9 @@ public class Enemy : MonoBehaviour
 
     void DamagePlayer(int amount)
     {
+        // Play player playerHurt sound effect
+        audioSource.PlayOneShot(soundEffect.PlayerHurt);
+
         playerScript.CurrentHealth -= amount;
         // Debug.Log("Enemy dealt " + amount + " damage!");
     }
@@ -179,6 +192,8 @@ public class Enemy : MonoBehaviour
         if (IsDead)
             return; // If the enemy is dead we don't need to deal damage
 
+        // Play enemy enemyHurt sound effect
+        audioSource.PlayOneShot(soundEffect.EnemyHurt);
         health -= damage;
         ShowDamageNumber(damage, isCritical);
 
@@ -213,6 +228,9 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        // Play enemy enemyDie sound effect
+        audioSource.PlayOneShot(soundEffect.EnemyDie);
+
         IsDead = true;
         animator.SetTrigger(DeathAnimationTrigger);
 

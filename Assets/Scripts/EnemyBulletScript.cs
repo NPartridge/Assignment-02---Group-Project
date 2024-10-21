@@ -12,6 +12,7 @@ public class EnemyBulletScript : MonoBehaviour
     void Start()
     {
         startPosition = transform.position;
+
     }
 
     void Update()
@@ -50,11 +51,13 @@ public class EnemyBulletScript : MonoBehaviour
         
         if (other.CompareTag("Player"))
         {
+            
             // Get the enemy the bullet collided with
             Player player = other.gameObject.GetComponent<Player>();
 
             if (player != null)
             {
+                
                 player.CurrentHealth -= damage;
             }
 

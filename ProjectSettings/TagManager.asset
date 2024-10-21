@@ -9,6 +9,8 @@ TagManager:
   - Bullet
   - RangedEnemy
   - Destructible
+  - MusicPlayer
+  - SoundFX
   layers:
   - Default
   - TransparentFX

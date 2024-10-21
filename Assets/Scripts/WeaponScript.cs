@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class WeaponScript : MonoBehaviour
 {
+    [SerializeField] SoundEffect soundEffect;
+
     private float nextFire;
     public GameObject bulletPrefab;
 
@@ -18,11 +20,16 @@ public class WeaponScript : MonoBehaviour
     
     private PauseManager pauseManager;
 
+    private AudioSource audioSource;
+
     void Start()
     {
         //playerScript = GetComponent<Player>();
         playerScript = GetComponentInParent<Player>();
         pauseManager = FindObjectOfType<PauseManager>();
+
+        audioSource = GetComponent<AudioSource>();
+
     }
 
     void Update()
@@ -83,9 +90,13 @@ public class WeaponScript : MonoBehaviour
             totalDamage = Mathf.RoundToInt(baseDamage * playerScript.CritDamageMultiplier);
         }
 
+        // Play player attack sound effect
+        audioSource.PlayOneShot(soundEffect.PlayerAttack);
+
         GameObject bullet = Instantiate(bulletPrefab, weaponFiringPoint.position, weaponFiringPoint.rotation);
         BulletScript bulletScript = bullet.GetComponent<BulletScript>();
 
+        
         if (bulletScript != null)
         {
             bulletScript.SetDamage(totalDamage, isCritical);
