@@ -25,7 +25,15 @@ public class SpeedPotionScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            audioSource.PlayOneShot(soundEffect.SpeedPotion);
+            // Creating a separate sound object so when we destroy the speed potion it doesn't delete the audio too
+            GameObject soundGameObject = new GameObject("SpeedPotionSound");
+            AudioSource newAudioSource = soundGameObject.AddComponent<AudioSource>();
+            newAudioSource.clip = soundEffect.SpeedPotion;
+            newAudioSource.Play();
+            
+            // We destroy the sound object after its played its sound
+            Destroy(soundGameObject, soundEffect.SpeedPotion.length);
+            
             // temporarily increase player speed
             Player player = other.GetComponent<Player>();
             player.ApplyTemporarySpeedBuff(speedIncreaseValue, duration);
