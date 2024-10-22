@@ -72,6 +72,12 @@ public class Player : MonoBehaviour
             }
         }
     }
+    
+    public event Action OnSpeedBuffStarted;
+    public event Action OnSpeedBuffEnded;
+    
+    private Coroutine speedBuffCoroutine;
+    private float originalSpeed;
 
     public bool AutoAimEnabled { get; private set; }
  
@@ -93,6 +99,7 @@ public class Player : MonoBehaviour
             Debug.LogError("No upgrade manager, pause manager, and or game over manager in scene");
         }
         
+        originalSpeed = speed;
         CurrentHealth = MaximumHealth; // Init current health to max HP on start
         animator = GetComponent<Animator>();
     }
@@ -337,18 +344,37 @@ public class Player : MonoBehaviour
         get => basePlayerDamage;
     }
 
-    public IEnumerator ApplyTemporarySpeedBuff(float amount, float duration)
+    public void ApplyTemporarySpeedBuff(float amount, float duration)
     {
-        // store the unmodified value
-        float originalValue = speed;
-        // increase the value by the amount
-        speed += amount;
-        // wait for the duration
-        yield return new WaitForSecondsRealtime(duration);
-        // revert to the original value
-        speed = originalValue;
+        if (speedBuffCoroutine != null)
+        {
+            StopCoroutine(speedBuffCoroutine);
+        }
+        speedBuffCoroutine = StartCoroutine(SpeedBuffCoroutine(amount, duration));
     }
-    
+
+    private IEnumerator SpeedBuffCoroutine(float amount, float duration)
+    {
+        // Apply the speed buff
+        speed = originalSpeed + amount;
+        OnSpeedBuffStarted?.Invoke();
+
+        // Wait for the duration of the speed buff. If the player picks up a speed buff whilst one is already active then
+        // the duration of it is refreshed
+        float remainingTime = duration;
+        while (remainingTime > 0)
+        {
+            remainingTime -= Time.deltaTime;
+            yield return null;
+        }
+
+        // Speed buff has ended
+        speed = originalSpeed;
+        OnSpeedBuffEnded?.Invoke();
+
+        speedBuffCoroutine = null;
+    }
+
     void OnDrawGizmosSelected()
     {
         // A yellow sphere of the players pickup radius. The player needs to be selected in the editor for this to appear

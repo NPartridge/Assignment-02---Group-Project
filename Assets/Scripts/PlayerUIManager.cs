@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-// Currently just handles the players experience/leveling
+// Currently handles speed buff, experience bar, and player level text
 public class PlayerUIManager : MonoBehaviour
 {
     public Player player;
@@ -10,16 +10,24 @@ public class PlayerUIManager : MonoBehaviour
     public Image experienceBarFill;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI experienceText;
+    
+    public Image speedBuffIcon;
 
     void Start()
     {
         player.OnExperienceChanged += UpdateUI;
+        player.OnSpeedBuffStarted += ShowSpeedBuffIcon;
+        player.OnSpeedBuffEnded += HideSpeedBuffIcon;
+        
         UpdateUI();
+        HideSpeedBuffIcon(); // Just making sure its hidden on start
     }
 
     void OnDestroy()
     {
         player.OnExperienceChanged -= UpdateUI;
+        player.OnSpeedBuffStarted -= ShowSpeedBuffIcon;
+        player.OnSpeedBuffEnded -= HideSpeedBuffIcon;
     }
 
     void UpdateUI()
@@ -42,5 +50,21 @@ public class PlayerUIManager : MonoBehaviour
     void UpdateLevelText()
     {
         levelText.text = $"Level {player.level}";
+    }
+    
+    void ShowSpeedBuffIcon()
+    {
+        if (speedBuffIcon != null)
+        {
+            speedBuffIcon.enabled = true;
+        }
+    }
+
+    void HideSpeedBuffIcon()
+    {
+        if (speedBuffIcon != null)
+        {
+            speedBuffIcon.enabled = false;
+        }
     }
 }

@@ -23,7 +23,7 @@ public class SpeedPotionScript : MonoBehaviour
         {
             // temporarily increase player speed
             Player player = other.GetComponent<Player>();
-            player.StartCoroutine(player.ApplyTemporarySpeedBuff(speedIncreaseValue, duration));
+            player.ApplyTemporarySpeedBuff(speedIncreaseValue, duration);
             // destroy the potion
             Destroy(gameObject);
         }
