@@ -11,6 +11,7 @@ TagManager:
   - Destructible
   - MusicPlayer
   - SoundFX
+  - Gun
   layers:
   - Default
   - TransparentFX
