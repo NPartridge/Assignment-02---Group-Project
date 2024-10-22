@@ -11,19 +11,19 @@ public class Player : MonoBehaviour
     [Header("Player stat sheet")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
-    
+
     [SerializeField] private int currentHealth;
     [SerializeField] private int baseMaximumHealth = 100;
     private int flatHealthIncrease = 0;
-    
+
     public int experience = 0;
     public float pickupRadius = 5f;
-    
+
     [SerializeField] private float critChance = 0f;
     [SerializeField] private float critDamageMultiplier = 2f;
-    
+
     [SerializeField] private float attackSpeed = 1f;
-    
+
     [SerializeField] private int basePlayerDamage = 0;
     [SerializeField] private float range = 20f;
     //private int flatPlayerDamageIncrease = 0;
@@ -33,16 +33,16 @@ public class Player : MonoBehaviour
     public float CritChance => critChance;
     public float CritDamageMultiplier => critDamageMultiplier;
     public bool IsDead => isDead;
-    
+
     [Header("Levelling System")]
     public int level = 1;
     public int experienceToNextLevel = 0;
-    
+
     public int MaximumHealth
     {
         get => baseMaximumHealth + flatHealthIncrease;
     }
-    
+
     public event Action<int, int> OnHealthChanged;
 
     public int CurrentHealth
@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
         {
             int previousHealth = currentHealth;
             currentHealth = Mathf.Clamp(value, 0, MaximumHealth);
-            
+
             if (currentHealth != previousHealth)
             {
                 OnHealthChanged?.Invoke(currentHealth, MaximumHealth);
@@ -75,7 +75,7 @@ public class Player : MonoBehaviour
     }
 
     public bool AutoAimEnabled { get; private set; }
- 
+
     private UpgradeManager upgradeManager;
     private GameOverManager _gameOverManager;
     private PauseManager pauseManager;
@@ -84,18 +84,19 @@ public class Player : MonoBehaviour
 
     private AudioSource audioSource;
 
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
         upgradeManager = FindObjectOfType<UpgradeManager>();
         _gameOverManager = FindObjectOfType<GameOverManager>();
         pauseManager = FindObjectOfType<PauseManager>();
-        
+
         if (upgradeManager == null || _gameOverManager == null || pauseManager == null)
         {
             Debug.LogError("No upgrade manager, pause manager, and or game over manager in scene");
         }
-        
+
         CurrentHealth = MaximumHealth; // Init current health to max HP on start
         animator = GetComponent<Animator>();
 
@@ -170,18 +171,39 @@ public class Player : MonoBehaviour
 
     private void RotateTowardsMouse()
     {
+        // Project a ray from the camera to the mouse positon
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Vector3 targetPoint = hit.point;
-            Vector3 direction = targetPoint - transform.position;
 
-            if (direction != Vector3.zero)
+            // Rotate the player transform around its vertical axis to face the (x, z) co-ordinates of the mouse cursor in world space
+            Vector3 targetPosition = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+            transform.LookAt(targetPosition);
+
+
+
+            // Get  player's firing point and its direction to the target
+            Transform firingPoint = transform.Find("WeaponFiringPoint");
+            Vector3 targetDirection = (hit.point - firingPoint.position);
+
+            // Only allow the player to shoot if it a minimum distance from target.
+            if(targetDirection.magnitude > 3f)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+                // Rotate the firing point to face the target
+                Quaternion rotationToTarget = Quaternion.LookRotation(targetDirection);
+                firingPoint.rotation = Quaternion.Slerp(firingPoint.rotation, rotationToTarget, Time.deltaTime * rotationSpeed);
+
+
+                // Get the gun model and its direction to the target
+                GameObject gunModel = GameObject.FindGameObjectWithTag("Gun");
+                Vector3 gunToTargetDirection = (hit.point - gunModel.transform.position).normalized;
+
+                // Rotate the gun model to face the target
+                Quaternion gunRotationToTarget = Quaternion.LookRotation(gunToTargetDirection);
+                Quaternion.Slerp(gunModel.transform.rotation, gunRotationToTarget, Time.deltaTime * rotationSpeed);
             }
+
+
         }
     }
 
@@ -194,43 +216,43 @@ public class Player : MonoBehaviour
             Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "enabled" : "disabled"));
         }
     }
-    
+
     private GameObject currentTarget;
-    
+
     private GameObject FindNearestTarget()
     {
         // Our current targets are enemies and barrels
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         GameObject[] crates = GameObject.FindGameObjectsWithTag("Destructible");
-        
+
         List<GameObject> potentialTargets = new List<GameObject>();
         potentialTargets.AddRange(enemies);
         potentialTargets.AddRange(crates);
 
         GameObject nearestTarget = null;
         float minDistance = Mathf.Infinity; // https://docs.unity3d.com/ScriptReference/Mathf.Infinity.html
-        
+
         foreach (GameObject target in potentialTargets)
         {
             Enemy enemyScript = target.GetComponent<Enemy>();
             DestructibleObject destructibleScript = target.GetComponent<DestructibleObject>();
-            
+
             // For enemies, we want to avoid targeting enemies that are dead
             if (enemyScript != null && enemyScript.IsDead)
                 continue;
-            
+
             if (destructibleScript != null && !destructibleScript.IsActive)
                 continue;
-            
+
             float distance = Vector3.Distance(transform.position, target.transform.position);
-            
+
             // For destructibles, we only want to shoot and destructibles that are within the range of the player
             if (destructibleScript != null)
             {
                 if (distance > range)
                     continue;
             }
-            
+
             if (distance < minDistance)
             {
                 minDistance = distance;
@@ -241,7 +263,7 @@ public class Player : MonoBehaviour
         currentTarget = nearestTarget;
         return nearestTarget;
     }
-    
+
     // We need this in the weapon script for aiming at targets
     public GameObject CurrentTarget => currentTarget;
 
@@ -252,7 +274,7 @@ public class Player : MonoBehaviour
         //Debug.Log("Player received: " + amount + " experience. Total player experience: " + experience);
         CheckLevelUp();
     }
-    
+
     // Currently levelling up is based on a quadratic formula (the change in the change of our y is constant)
     // Below is the output for the current formula if the starting experience is 100
     // Base exp = 100 -> 400 -> 900 -> 1600 -> 2500 -> 3600 -> (This is the change in our y, NOT CONSTANT)
@@ -270,13 +292,13 @@ public class Player : MonoBehaviour
 
             level++;
             Debug.Log("Player leveled up to level " + level + "!");
-            
+
             if (upgradeManager != null)
             {
                 upgradeManager.ShowUpgradeOptions(this);
             }
         }
-        
+
         experienceToNextLevel = CalculateTotalExperienceForLevel(level + 1);
     }
 
@@ -285,7 +307,7 @@ public class Player : MonoBehaviour
         int baseXP = 100;
         return baseXP * (targetLevel - 1) * (targetLevel - 1);
     }
-    
+
     public void UpgradeMovementSpeed(float amount)
     {
         speed += amount;
@@ -297,19 +319,19 @@ public class Player : MonoBehaviour
         rotationSpeed += amount;
         Debug.Log("Rotation speed increased to " + rotationSpeed);
     }
-    
+
     public void UpgradeFlatHealth(int amount)
     {
         flatHealthIncrease += amount;
         Debug.Log("Flat health increased by " + amount + ". Total health is now " + MaximumHealth);
-        
+
         // Increase the current HP as well as the maximum HP
         CurrentHealth += amount;
     }
 
     public void UpgradePercentHealth(float amount)
     {
-        
+
     }
 
     public void UpgradePickupRadius(float amount)
@@ -317,31 +339,31 @@ public class Player : MonoBehaviour
         pickupRadius += amount;
         Debug.Log("Pickup radius increased to " + pickupRadius);
     }
-    
+
     public void UpgradeCritChance(float percentage)
     {
         critChance += percentage / 100f;
         Debug.Log("Crit chance increased to " + critChance * 100f + "%");
     }
-    
+
     public void UpgradeCritDamage(float multiplierIncrease)
     {
         critDamageMultiplier += multiplierIncrease;
         Debug.Log("Crit damage multi increased to " + critDamageMultiplier + "x");
     }
-    
+
     public void UpgradeAttackSpeed(float amount)
     {
         attackSpeed += amount;
         Debug.Log("Attack speed increased to " + attackSpeed);
     }
-    
+
     public void UpgradeDamage(int amount)
     {
         basePlayerDamage += amount;
         Debug.Log("Player damage increased by " + amount + ". Total player damage is now " + TotalPlayerDamage);
     }
-    
+
     public int TotalPlayerDamage
     {
         get => basePlayerDamage;
@@ -358,6 +380,8 @@ public class Player : MonoBehaviour
         // revert to the original value
         speed = originalValue;
     }
+
+    /*
     
     void OnDrawGizmosSelected()
     {
@@ -365,4 +389,5 @@ public class Player : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, pickupRadius);
     }
+    */
 }
