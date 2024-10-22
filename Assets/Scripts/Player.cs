@@ -83,8 +83,7 @@ public class Player : MonoBehaviour
     private bool isDead = false;
 
     private AudioSource audioSource;
-
-
+    
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
@@ -124,8 +123,7 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxisRaw("Horizontal");
 
         Vector3 direction = new Vector3(horizontalInput, 0, forwardInput).normalized;
-
-
+        
         // We want to move the player in world space, but we also want the character model to always face an enemy target when
         // auto-attacking or the mouse position when not 
         // Further, if the character is facing to the right, pressing the horizontal input key for right, should walk it forward
@@ -173,15 +171,13 @@ public class Player : MonoBehaviour
     {
         // Project a ray from the camera to the mouse positon
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-
             // Rotate the player transform around its vertical axis to face the (x, z) co-ordinates of the mouse cursor in world space
             Vector3 targetPosition = new Vector3(hit.point.x, transform.position.y, hit.point.z);
             transform.LookAt(targetPosition);
-
-
-
+            
             // Get  player's firing point and its direction to the target
             Transform firingPoint = transform.Find("WeaponFiringPoint");
             Vector3 targetDirection = (hit.point - firingPoint.position);
