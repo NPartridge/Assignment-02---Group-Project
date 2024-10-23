@@ -74,24 +74,31 @@ public class Gem : MonoBehaviour
         {
             if (gemType == GemType.Experience)
             {
-                // Once the gem is close enough, give the player their exp and destroy the gem. We want the experience to be counted once the gem has reached the player
+                // Once the gem is close enough, give the player their exp and destroy the gem.
+                // We want the experience to be counted once the gem has reached the player
                 playerScript.AddExperience(experiencePoints);
-
-                // Destroy the gem
                 Destroy(gameObject);
             }
             else if (gemType == GemType.Vacuum)
             {
                 // Once the vacuum is close enough, suck in all the gems
                 ActivateVacuum();
-                
-                audioSource.PlayOneShot(soundEffect.VacuumGemCollect);
 
-                // Destroy the vacuum after a delay for sound effect
-                Destroy(gameObject, 0.3f);
+                // Creating a separate sound object so when we destroy the vacuum it doesn't delete the audio
+                GameObject soundGameObject = new GameObject("VacuumGemSound");
+                AudioSource newAudioSource = soundGameObject.AddComponent<AudioSource>();
+                newAudioSource.clip = soundEffect.VacuumGemCollect;
+                newAudioSource.Play();
+
+                // We destroy the sound object after its played its sound
+                Destroy(soundGameObject, soundEffect.VacuumGemCollect.length);
+
+                // Destroy the vacuum gem immediately
+                Destroy(gameObject);
             }
         }
     }
+
 
     public void StartMovingGemToPlayer(float speedMultiplier = 1f)
     {

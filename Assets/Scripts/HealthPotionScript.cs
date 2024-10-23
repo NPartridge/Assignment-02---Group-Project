@@ -23,13 +23,21 @@ public class HealthPotionScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            audioSource.PlayOneShot(soundEffect.HealthPotion);
-            // restore player health
+            // Creating a separate sound object so when we destroy the speed potion it doesn't delete the audio
+            GameObject soundGameObject = new GameObject("HealthPotionSound");
+            AudioSource newAudioSource = soundGameObject.AddComponent<AudioSource>();
+            newAudioSource.clip = soundEffect.HealthPotion;
+            newAudioSource.Play();
+        
+            // We destroy the sound object after its played its sound
+            Destroy(soundGameObject, soundEffect.HealthPotion.length);
+        
+            // Restore the players HP
             other.GetComponent<Player>().CurrentHealth += healthRestoreValue;
-            // destroy the potion after short delay for sound effect to play
-            Destroy(gameObject, 0.5f);
+        
+            // Destroy the potion immediately
+            Destroy(gameObject);
         }
     }
-
 }
 

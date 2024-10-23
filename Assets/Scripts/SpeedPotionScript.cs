@@ -5,6 +5,7 @@ public class SpeedPotionScript : MonoBehaviour
 {
     [SerializeField] SoundEffect soundEffect;
     AudioSource audioSource;
+    
     public float speedIncreaseValue = 2.5f;
     public float duration = 5f;
 
@@ -24,12 +25,20 @@ public class SpeedPotionScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            audioSource.PlayOneShot(soundEffect.SpeedPotion);
+            // Creating a separate sound object so when we destroy the speed potion it doesn't delete the audio too
+            GameObject soundGameObject = new GameObject("SpeedPotionSound");
+            AudioSource newAudioSource = soundGameObject.AddComponent<AudioSource>();
+            newAudioSource.clip = soundEffect.SpeedPotion;
+            newAudioSource.Play();
+            
+            // We destroy the sound object after its played its sound
+            Destroy(soundGameObject, soundEffect.SpeedPotion.length);
+            
             // temporarily increase player speed
             Player player = other.GetComponent<Player>();
-            player.StartCoroutine(player.ApplyTemporarySpeedBuff(speedIncreaseValue, duration));
+            player.ApplyTemporarySpeedBuff(speedIncreaseValue, duration);
             // destroy the potion
-            Destroy(gameObject, 0.5f);
+            Destroy(gameObject);
         }
     }
 }
