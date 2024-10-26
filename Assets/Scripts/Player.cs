@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // Information to help rotate to mouse position found here: https://discussions.unity.com/t/rotate-towards-mouse-position/883950
 public class Player : MonoBehaviour
@@ -69,18 +70,18 @@ public class Player : MonoBehaviour
                 audioSource.PlayOneShot(soundEffect.PlayerDie);
 
                 // Tell the animator that the player is dead, show death animation, display game over screen
-                animator.SetBool("isDead", true);
-                animator.SetTrigger("die");
+                playerAnimator.SetBool("isDead", true);
+                playerAnimator.SetTrigger("die");
                 _gameOverManager.ShowGameOverUI();
                 isDead = true;
                 //Debug.Log("Player is dead!");
             }
         }
     }
-    
+
     public event Action OnSpeedBuffStarted;
     public event Action OnSpeedBuffEnded;
-    
+
     private Coroutine speedBuffCoroutine;
     private float originalSpeed;
 
@@ -89,14 +90,30 @@ public class Player : MonoBehaviour
     private UpgradeManager upgradeManager;
     private GameOverManager _gameOverManager;
     private PauseManager pauseManager;
-    private Animator animator;
+    private Animator playerAnimator;
     private bool isDead = false;
 
     private AudioSource audioSource;
-    
+
+    // Target Image 
+    bool isMenuPanelActive;
+    public Image TargetImage;
+
+    // Auto-aim image
+    public Image AutoAimImage;
+
+    [SerializeField] Animator targetAnimator;
+
     private void Start()
     {
+        // Hide AutoAimImage at start
+        AutoAimImage.enabled = false;
+
+        //Hide the cursor when the game starts
+        Cursor.visible = false;
+
         Cursor.lockState = CursorLockMode.Confined;
+
         upgradeManager = FindObjectOfType<UpgradeManager>();
         _gameOverManager = FindObjectOfType<GameOverManager>();
         pauseManager = FindObjectOfType<PauseManager>();
@@ -105,16 +122,28 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("No upgrade manager, pause manager, and or game over manager in scene");
         }
-        
+
         originalSpeed = speed;
-        CurrentHealth = MaximumHealth; // Init current health to max HP on start
-        animator = GetComponent<Animator>();
+        CurrentHealth = MaximumHealth; // Init current health to max HP
+        playerAnimator = GetComponent<Animator>();
 
         audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
+        // Check if a Menu is active
+        isMenuPanelActive = pauseManager.mainMenuPanel.activeSelf || _gameOverManager.gameOverUI.activeSelf || upgradeManager.upgradePanel.activeSelf;
+
+        // Set target  image position to mouse cursor position
+        TargetImage.transform.position = Input.mousePosition;
+
+        // If the cursor is visible and all menu panels are closed, hide the cursor
+        ManageCursorVisibility();
+
+        // Display the target image when no menu open and auto-aim is off. 
+        DisplayTargetImage(isMenuPanelActive, TargetImage);
+
         // We don't want to update the player if they are dead
         if (!isDead)
         {
@@ -128,25 +157,91 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void ManageCursorVisibility()
+    {
+        if (isMenuPanelActive)
+        {
+            // If a menu is active and the cursor is not already visible then we make it visible so the player can interact with the menus/UI
+            if (!Cursor.visible)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+        }
+        else
+        {
+            // If no menu is active we hide the cursor
+            if (Cursor.visible)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+        }
+    }
+    
+    private void DisplayTargetImage(bool menuPanelActive, Image target)
+    {
+        // If we are not in Auto Aim Mode and not in a menu
+        if (!AutoAimEnabled && !menuPanelActive)
+        {
+            // if a target image is not currently displayed, Display a target image
+            if (!target.enabled)
+            {
+                target.enabled = true;
+            }
+            
+            // Check if the target image position is the same as that of an enemy object or destructible object
+            // Project a ray from the camera to the mouse postion
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            // Check if the ray collides with an enemy object or destructible object
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                // Change the color of the target image and animate it if it is at the same position as an enemy or destructible
+                UpdateTargetImage(hit, target);
+            }
+        }
+        // If we are in Auto aim mode or menu, set target image to false
+        else
+        {
+            target.enabled = false;
+        }
+    }
+
+    private void UpdateTargetImage(RaycastHit hit, Image target)
+    {
+        if (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Destructible"))
+        {
+            target.color = Color.red;
+            targetAnimator.SetBool("hitTarget", true);
+        }
+        else
+        {
+            target.color = Color.white;
+            targetAnimator.SetBool("hitTarget", false);
+        }
+    }
+
     private void MovePlayer()
     {
         float forwardInput = Input.GetAxisRaw("Vertical");
         float horizontalInput = Input.GetAxisRaw("Horizontal");
 
         Vector3 direction = new Vector3(horizontalInput, 0, forwardInput).normalized;
-        
+
+        // Animation -
         // We want to move the player in world space, but we also want the character model to always face an enemy target when
         // auto-attacking or the mouse position when not 
-        // Further, if the character is facing to the right, pressing the horizontal input key for right, should walk it forward
+        // Further, if the character model is facing to the right, pressing the horizontal input key for right, should walk it forward
         // and pressing the horizontal left input should walk it backward
-        // Similarly, if the character is facing forward, pressing the vertical input key should walk it forward, and vertical input key
+        // Similarly, if the character model is facing forward, pressing the vertical input key should walk it forward, and vertical input key
         // for back should walk it backward
         float forwardDotProduct = Vector3.Dot(direction, transform.forward);
         float horizontalDotProduct = Vector3.Dot(direction, transform.right);
 
         // Update Animation Parameters
-        animator.SetFloat("velocityX", horizontalDotProduct);
-        animator.SetFloat("velocityZ", forwardDotProduct);
+        playerAnimator.SetFloat("velocityX", horizontalDotProduct);
+        playerAnimator.SetFloat("velocityZ", forwardDotProduct);
 
         Vector3 velocity = direction * speed;
 
@@ -182,19 +277,19 @@ public class Player : MonoBehaviour
     {
         // Project a ray from the camera to the mouse positon
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        
+
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             // Rotate the player transform around its vertical axis to face the (x, z) co-ordinates of the mouse cursor in world space
             Vector3 targetPosition = new Vector3(hit.point.x, transform.position.y, hit.point.z);
             transform.LookAt(targetPosition);
-            
+
             // Get  player's firing point and its direction to the target
             Transform firingPoint = transform.Find("WeaponFiringPoint");
             Vector3 targetDirection = (hit.point - firingPoint.position);
 
             // Only allow the player to shoot if it a minimum distance from target.
-            if(targetDirection.magnitude > 3f)
+            if (targetDirection.magnitude > 3f)
             {
                 // Rotate the firing point to face the target
                 Quaternion rotationToTarget = Quaternion.LookRotation(targetDirection);
@@ -220,7 +315,24 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             AutoAimEnabled = !AutoAimEnabled;
-            Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "enabled" : "disabled"));
+
+            // Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "enabled" : "disabled"));
+
+            // Display an icon if auto aim is on
+            DisplayAutoAimImage(AutoAimEnabled);
+
+        }
+    }
+
+    private void DisplayAutoAimImage(bool isAutoAimOn)
+    {
+        if (isAutoAimOn)
+        {
+            AutoAimImage.enabled = true;
+        }
+        else
+        {
+            AutoAimImage.enabled = false;
         }
     }
 
@@ -253,7 +365,7 @@ public class Player : MonoBehaviour
 
             float distance = Vector3.Distance(transform.position, target.transform.position);
 
-            // For destructibles, we only want to shoot and destructibles that are within the range of the player
+            // We only want to shoot and destructibles that are within the range of the player
             if (destructibleScript != null)
             {
                 if (distance > range)
@@ -306,7 +418,7 @@ public class Player : MonoBehaviour
                 upgradeManager.ShowUpgradeOptions(this);
             }
         }
-        
+
         OnExperienceChanged?.Invoke();
     }
 

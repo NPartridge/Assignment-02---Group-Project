@@ -261,7 +261,7 @@ MonoBehaviour:
   damage: 8
   health: 350
   attackSpeed: 2.3
-  gemPrefab: {fileID: 3564743645360956725, guid: 5e94ec3ba0b726140afe335b2aee1f43, type: 3}
+  gemPrefab: {fileID: 1000010728489230, guid: 7fb16a67c804cab4ca73f05986645616, type: 3}
   damageNumberPrefab: {fileID: 4775476507757662158, guid: e1eb92d2126d94440b7c56c74dfe3d2b, type: 3}
   firingPoint: {fileID: 8209788821036175165}
   gunPrefab: {fileID: 5849211771123773389}

@@ -75,6 +75,8 @@ MonoBehaviour:
   - {fileID: 8585397334145850296, guid: 2fa0c2a4b333e9444a13a609c5453896, type: 3}
   - {fileID: 4826342286264891340, guid: 5a444dccc174e2342bf8d7daaa9a45d2, type: 3}
   - {fileID: 4371999440249224958, guid: d16f17aab9d49494f9400fd8e9816c0a, type: 3}
+  minSpawnTime: 45
+  maxSpawnTime: 70
 --- !u!208 &2839545096274168057
 NavMeshObstacle:
   m_ObjectHideFlags: 0
