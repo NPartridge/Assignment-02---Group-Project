@@ -17,6 +17,9 @@ public class DestructibleObject : MonoBehaviour
     
     public bool IsActive { get; private set; }
 
+    [SerializeField] float minSpawnTime = 45f;
+    [SerializeField] float maxSpawnTime = 70f;
+
     private void Start()
     {
         // We need the mesh renderers and colliders for respawning the objects. To respawn the objects we will
@@ -73,9 +76,11 @@ public class DestructibleObject : MonoBehaviour
         {
             navObstacle.enabled = false;
         }
-        
+
         // The spawn timer for the object. We re-enable everything after this point as the object should respawn
-        yield return new WaitForSeconds(10f);
+        // Spawntime is a random number min and max spawn time.
+        float spawnTime = Random.Range(minSpawnTime, maxSpawnTime);
+        yield return new WaitForSeconds(spawnTime);
         
         IsActive = true;
         
