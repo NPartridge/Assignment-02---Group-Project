@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
         }
 
         originalSpeed = speed;
-        CurrentHealth = MaximumHealth; // Init current health to max HP on start
+        CurrentHealth = MaximumHealth; // Init current health to max HP
         playerAnimator = GetComponent<Animator>();
 
         audioSource = GetComponent<AudioSource>();
@@ -139,7 +139,7 @@ public class Player : MonoBehaviour
         TargetImage.transform.position = Input.mousePosition;
 
         // If the cursor is visible and all menu panels are closed, hide the cursor
-        HideCursor();
+        ManageCursorVisibility();
 
         // Display the target image when no menu open and auto-aim is off. 
         DisplayTargetImage(isMenuPanelActive, TargetImage);
@@ -157,15 +157,28 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void HideCursor()
+    private void ManageCursorVisibility()
     {
-        if (Cursor.visible && !isMenuPanelActive)
+        if (isMenuPanelActive)
         {
-            // Hide the mouse cursor
-            Cursor.visible = false;
+            // If a menu is active and the cursor is not already visible then we make it visible so the player can interact with the menus/UI
+            if (!Cursor.visible)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+        }
+        else
+        {
+            // If no menu is active we hide the cursor
+            if (Cursor.visible)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Confined;
+            }
         }
     }
-
+    
     private void DisplayTargetImage(bool menuPanelActive, Image target)
     {
         // If we are not in Auto Aim Mode and not in a menu
@@ -176,7 +189,7 @@ public class Player : MonoBehaviour
             {
                 target.enabled = true;
             }
-
+            
             // Check if the target image position is the same as that of an enemy object or destructible object
             // Project a ray from the camera to the mouse postion
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -186,7 +199,6 @@ public class Player : MonoBehaviour
             {
                 // Change the color of the target image and animate it if it is at the same position as an enemy or destructible
                 UpdateTargetImage(hit, target);
-
             }
         }
         // If we are in Auto aim mode or menu, set target image to false
@@ -302,8 +314,6 @@ public class Player : MonoBehaviour
         // Allows the player to toggle auto-aim on/off when pressing 'R'. Halls of Torment has the same exact system
         if (Input.GetKeyDown(KeyCode.R))
         {
-
-
             AutoAimEnabled = !AutoAimEnabled;
 
             // Debug.Log("Auto-aim is now " + (AutoAimEnabled ? "enabled" : "disabled"));
@@ -355,7 +365,7 @@ public class Player : MonoBehaviour
 
             float distance = Vector3.Distance(transform.position, target.transform.position);
 
-            // For destructibles, we only want to shoot and destructibles that are within the range of the player
+            // We only want to shoot and destructibles that are within the range of the player
             if (destructibleScript != null)
             {
                 if (distance > range)
