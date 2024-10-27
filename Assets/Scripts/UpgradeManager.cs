@@ -136,25 +136,25 @@ public class UpgradeManager : MonoBehaviour
                 player.UpgradeMovementSpeed(0.6f);
                 break;
             case UpgradeType.RotationSpeed:
-                player.UpgradeRotationSpeed(0.6f);
+                player.UpgradeRotationSpeed(2f);
                 break;
             case UpgradeType.FlatHealth:
-                player.UpgradeFlatHealth(12);
+                player.UpgradeFlatHealth(30);
                 break;
             case UpgradeType.PickupRadius:
-                player.UpgradePickupRadius(0.5f);
+                player.UpgradePickupRadius(1f);
                 break;
             case UpgradeType.CritChance:
-                player.UpgradeCritChance(1f);
+                player.UpgradeCritChance(5f);
                 break;
             case UpgradeType.CritDamage:
-                player.UpgradeCritDamage(0.15f);
+                player.UpgradeCritDamage(0.8f);
                 break;
             case UpgradeType.AttackSpeed:
-                player.UpgradeAttackSpeed(0.1f);
+                player.UpgradeAttackSpeed(0.4f);
                 break;
             case UpgradeType.Damage:
-                player.UpgradeDamage(8);
+                player.UpgradeDamage(12);
                 break;
         }
         Debug.Log("Player upgraded their " + upgrade);

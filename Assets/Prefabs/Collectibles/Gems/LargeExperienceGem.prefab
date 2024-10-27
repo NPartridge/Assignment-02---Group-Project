@@ -114,5 +114,5 @@ MonoBehaviour:
   soundEffect: {fileID: 3735551570257706192, guid: d913b657afa4f84458e8b0d95ea2e67c, type: 3}
   gemType: 0
   moveSpeed: 10
-  experiencePoints: 50
+  experiencePoints: 120
   gemSpeedMultiplier: 2
