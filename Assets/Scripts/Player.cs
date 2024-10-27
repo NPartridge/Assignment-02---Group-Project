@@ -7,6 +7,7 @@ using UnityEngine.UI;
 // Information to help rotate to mouse position found here: https://discussions.unity.com/t/rotate-towards-mouse-position/883950
 public class Player : MonoBehaviour
 {
+    private MusicPlayer musicPlayer;
     [SerializeField] SoundEffect soundEffect;
 
     [Header("Player stat sheet")]
@@ -66,8 +67,13 @@ public class Player : MonoBehaviour
 
             if (currentHealth <= 0)
             {
+                if (musicPlayer != null)
+                {
+                    musicPlayer.PlayGameOverMusic();
+                }
+                ;
                 // Play player death sound FX
-                audioSource.PlayOneShot(soundEffect.PlayerDie);
+                audioSource.PlayOneShot(soundEffect.PlayerDie, 0.3f);
 
                 // Tell the animator that the player is dead, show death animation, display game over screen
                 playerAnimator.SetBool("isDead", true);
@@ -113,6 +119,9 @@ public class Player : MonoBehaviour
         Cursor.visible = false;
 
         Cursor.lockState = CursorLockMode.Confined;
+
+        // Note game must be started from menu scene for music player to exist in main(game) scene)
+        musicPlayer = FindObjectOfType<MusicPlayer>();
 
         upgradeManager = FindObjectOfType<UpgradeManager>();
         _gameOverManager = FindObjectOfType<GameOverManager>();

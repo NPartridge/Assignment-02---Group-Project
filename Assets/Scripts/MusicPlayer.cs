@@ -9,16 +9,18 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] AudioClip menuSong;
     [SerializeField] AudioClip[] gameMusic;
     [SerializeField] AudioClip gameOver;
-
     [SerializeField] float volumeDecrement = 0.05f;
+
 
     private int currentSceneIndex;
     private bool hasSceneChanged = false;
 
     private AudioSource audioSource;
 
+    
     private void Start()
     {
+
         // Record the current scene index when we start the game
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
@@ -60,13 +62,6 @@ public class MusicPlayer : MonoBehaviour
             audioSource.Play();
             Debug.Log(audioSource.clip.name);
         }
-
-        // For Debugging
-        if (Input.GetKey(KeyCode.Space))
-        {
-            audioSource.Stop();
-        }
-
     }
 
     private bool RecordSceneChange(int currentScene, int activeScene)
@@ -118,7 +113,7 @@ public class MusicPlayer : MonoBehaviour
         audio.Stop();
     }
 
-    // Call this method from the GameOverManager Script
+    // Call this method from the Player Script
     public void PlayGameOverMusic()
     {
         LoadSong(gameOver, false);

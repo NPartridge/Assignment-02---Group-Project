@@ -15,8 +15,6 @@ public class GameOverManager : MonoBehaviour
     
     private GameTimer gameTimer;
 
-    private MusicPlayer musicPlayer;
-
     private void Start()
     {
         canvasGroup = gameOverUI.GetComponent<CanvasGroup>();
