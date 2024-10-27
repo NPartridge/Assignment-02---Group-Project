@@ -394,13 +394,7 @@ public class Player : MonoBehaviour
         CheckLevelUp();
         OnExperienceChanged?.Invoke();
     }
-
-    // Currently levelling up is based on a quadratic formula (the change in the change of our y is constant)
-    // Below is the output for the current formula if the starting experience is 100
-    // Base exp = 100 -> 400 -> 900 -> 1600 -> 2500 -> 3600 -> (This is the change in our y, NOT CONSTANT)
-    // Differences =  300 -> 500 -> 700 -> 900 -> 1100 -> (This is the change in the change of our y, IS CONSTANT)
-    // We probably do not want a linear or exponential system for this game because the player should be able
-    // to level at a steady pace without exp requirements becoming either too steep or too easy
+    
     private void CheckLevelUp()
     {
         // This loop is to help handle multiple level-ups when the experience is greater than one levelup threshold
@@ -422,9 +416,15 @@ public class Player : MonoBehaviour
         OnExperienceChanged?.Invoke();
     }
 
+    // Currently levelling up is based on a quadratic formula (the change in the change of our y is constant)
+    // Below is the output for the current formula if the starting experience is 100
+    // Base exp = 100 -> 400 -> 900 -> 1600 -> 2500 -> 3600 -> (This is the change in our y, NOT CONSTANT)
+    // Differences =  300 -> 500 -> 700 -> 900 -> 1100 -> (This is the change in the change of our y, IS CONSTANT)
+    // We probably do not want a linear or exponential system for this game because the player should be able
+    // to level at a steady pace without exp requirements becoming either too steep or too easy
     public int CalculateTotalExperienceForLevel(int targetLevel)
     {
-        int baseXP = 100;
+        int baseXP = 60;
         return baseXP * (targetLevel - 1) * (targetLevel - 1);
     }
 

@@ -255,7 +255,7 @@ MonoBehaviour:
   soundEffect: {fileID: 3735551570257706192, guid: d913b657afa4f84458e8b0d95ea2e67c, type: 3}
   stopDistance: 10
   rotationSpeed: 5
-  bulletPrefab: {fileID: 336449905815948132, guid: 69f8e85fb6717954f8610c3c0c202ffc, type: 3}
+  bulletPrefab: {fileID: 5579645245324949419, guid: 5ccd4670694310343ad42fe41a1357f8, type: 3}
   enemyType: 1
   speed: 2.4
   damage: 8
