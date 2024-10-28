@@ -765,7 +765,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Swamp Raiders
+  m_text: Swamp Raider
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e9e3c7d2bb7159f46a8c6c7782752d38, type: 2}
   m_sharedMaterial: {fileID: 3012920295049935118, guid: e9e3c7d2bb7159f46a8c6c7782752d38, type: 2}
