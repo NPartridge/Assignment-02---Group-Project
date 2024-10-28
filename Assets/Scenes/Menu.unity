@@ -695,6 +695,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 951173674}
+    - target: {fileID: 2841199075804966416, guid: 408b47576dfd61c44b9ae914da6abcf5, type: 3}
+      propertyPath: m_text
+      value: Swamp Raider
+      objectReference: {fileID: 0}
     - target: {fileID: 5188268569632470514, guid: 408b47576dfd61c44b9ae914da6abcf5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -974,6 +978,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5009407841767270969, guid: 4891993c7bab5584588bc3e5d2d604a9, type: 3}
+      propertyPath: gameMusic.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5009407841767270969, guid: 4891993c7bab5584588bc3e5d2d604a9, type: 3}
+      propertyPath: gameMusic.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: ccc69427846e2b74ba36922887f0b907, type: 3}
+    - target: {fileID: 5009407841767270969, guid: 4891993c7bab5584588bc3e5d2d604a9, type: 3}
+      propertyPath: gameMusic.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 30e51d007d77adc4e8047ff0d4c2322e, type: 3}
+    - target: {fileID: 5009407841767270969, guid: 4891993c7bab5584588bc3e5d2d604a9, type: 3}
+      propertyPath: gameMusic.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: 2ed386cc52d340a418182d83f192e1d5, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
