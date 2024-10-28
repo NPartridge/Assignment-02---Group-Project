@@ -26,6 +26,7 @@ public class GameOverManager : MonoBehaviour
         
         gameTimer = FindObjectOfType<GameTimer>();
 
+        // We need to load the game from the main menu for the music player to be present in the game scene
         musicPlayer = GameObject.FindGameObjectWithTag("MusicPlayer").GetComponent<MusicPlayer>();
         if (musicPlayer == null)
         {
