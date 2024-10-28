@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
                 }
                 ;
                 // Play player death sound FX
-                audioSource.PlayOneShot(soundEffect.PlayerDie, 0.3f);
+                audioSource.PlayOneShot(soundEffect.PlayerDie, 0.1f);
 
                 // Tell the animator that the player is dead, show death animation, display game over screen
                 playerAnimator.SetBool("isDead", true);

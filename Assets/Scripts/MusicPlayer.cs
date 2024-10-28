@@ -117,6 +117,7 @@ public class MusicPlayer : MonoBehaviour
     public void PlayGameOverMusic()
     {
         LoadSong(gameOver, false);
-        audioSource.Play();
+        // Allow a slight delay for the player death sound effect to finish
+        audioSource.PlayDelayed(1f);
     }
 }
