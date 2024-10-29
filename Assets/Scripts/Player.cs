@@ -153,11 +153,6 @@ public class Player : MonoBehaviour
 
             if (currentHealth <= 0)
             {
-                if (musicPlayer != null)
-                {
-                    musicPlayer.PlayGameOverMusic();
-                }
-                ;
                 // Play player death sound FX
                 audioSource.PlayOneShot(soundEffect.PlayerDie, 0.1f);
 
