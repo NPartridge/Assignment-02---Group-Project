@@ -148,6 +148,7 @@ public class Enemy : MonoBehaviour
             GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
 
             // The boss ranged enemy is using the bulletSpray prefab which is composed of three bullets each with a bullet script attached
+            //  The idea for the nested prefab came from the following course: https://www.udemy.com/course/the-ultimate-guide-to-game-development-with-unity/
             // We need to loop through each script attached to a bullet child of the prefab and set the damage
             if (transform.name == "BossZombieSoldier")
             {

@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 // Information to help rotate to mouse position found here: https://discussions.unity.com/t/rotate-towards-mouse-position/883950
 public class Player : MonoBehaviour
 {
+    private MusicPlayer musicPlayer;
     [SerializeField] SoundEffect soundEffect;
 
     [Header("Player stat sheet")]
@@ -43,6 +45,91 @@ public class Player : MonoBehaviour
     public int ExperienceIntoCurrentLevel => experience - TotalExperienceForCurrentLevel;
     public event Action OnExperienceChanged;
 
+    public event Action OnSpeedBuffStarted;
+    public event Action OnSpeedBuffEnded;
+
+    private Coroutine speedBuffCoroutine;
+    private float originalSpeed;
+
+    public bool AutoAimEnabled { get; private set; }
+
+    private UpgradeManager upgradeManager;
+    private GameOverManager gameOverManager;
+    private PauseManager pauseManager;
+    private Animator playerAnimator;
+    private CapsuleCollider playerCollider;
+    private NavMeshAgent navMeshAgent;
+    private bool isDead = false;
+
+    private AudioSource audioSource;
+
+    // Target Image 
+    bool isMenuPanelActive;
+    public Image TargetImage;
+
+    // Auto-aim image
+    public Image AutoAimImage;
+
+    [SerializeField] Animator targetAnimator;
+
+    private void Start()
+    {
+        // Hide AutoAimImage at start
+        AutoAimImage.enabled = false;
+
+        //Hide the cursor when the game starts
+        Cursor.visible = false;
+
+        Cursor.lockState = CursorLockMode.Confined;
+
+        // Note game must be started from menu scene for music player to exist in main(game) scene)
+        musicPlayer = FindObjectOfType<MusicPlayer>();
+
+        upgradeManager = FindObjectOfType<UpgradeManager>();
+        gameOverManager = FindObjectOfType<GameOverManager>();
+        pauseManager = FindObjectOfType<PauseManager>();
+        playerCollider = GetComponent<CapsuleCollider>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+
+        if (upgradeManager == null || gameOverManager == null || pauseManager == null)
+        {
+            Debug.LogError("No upgrade manager, pause manager, and or game over manager in scene");
+        }
+
+        originalSpeed = speed;
+        CurrentHealth = MaximumHealth; // Init current health to max HP
+        playerAnimator = GetComponent<Animator>();
+
+        audioSource = GetComponent<AudioSource>();
+    }
+
+    void Update()
+    {
+        // Check if a Menu is active
+        isMenuPanelActive = pauseManager.mainMenuPanel.activeSelf || gameOverManager.gameOverUI.activeSelf || upgradeManager.upgradePanel.activeSelf;
+
+        // Set target  image position to mouse cursor position
+        TargetImage.transform.position = Input.mousePosition;
+
+        // If the cursor is visible and all menu panels are closed, hide the cursor
+        ManageCursorVisibility();
+
+        // Display the target image when no menu open and auto-aim is off. 
+        DisplayTargetImage(isMenuPanelActive, TargetImage);
+
+        // We don't want to update the player if they are dead
+        if (!isDead)
+        {
+            // We don't want to update the player if there is a menu open
+            if (!pauseManager.IsAnyMenuOpen())
+            {
+                MovePlayer();
+                RotatePlayer();
+                CheckAutoAimToggle();
+            }
+        }
+    }
+    
     public int MaximumHealth
     {
         get => baseMaximumHealth + flatHealthIncrease;
@@ -67,92 +154,17 @@ public class Player : MonoBehaviour
             if (currentHealth <= 0)
             {
                 // Play player death sound FX
-                audioSource.PlayOneShot(soundEffect.PlayerDie);
+                audioSource.PlayOneShot(soundEffect.PlayerDie, 0.1f);
 
                 // Tell the animator that the player is dead, show death animation, display game over screen
                 playerAnimator.SetBool("isDead", true);
                 playerAnimator.SetTrigger("die");
-                _gameOverManager.ShowGameOverUI();
+                gameOverManager.ShowGameOverUI();
                 isDead = true;
+                
+                playerCollider.enabled = false;
+                navMeshAgent.enabled = false;
                 //Debug.Log("Player is dead!");
-            }
-        }
-    }
-
-    public event Action OnSpeedBuffStarted;
-    public event Action OnSpeedBuffEnded;
-
-    private Coroutine speedBuffCoroutine;
-    private float originalSpeed;
-
-    public bool AutoAimEnabled { get; private set; }
-
-    private UpgradeManager upgradeManager;
-    private GameOverManager _gameOverManager;
-    private PauseManager pauseManager;
-    private Animator playerAnimator;
-    private bool isDead = false;
-
-    private AudioSource audioSource;
-
-    // Target Image 
-    bool isMenuPanelActive;
-    public Image TargetImage;
-
-    // Auto-aim image
-    public Image AutoAimImage;
-
-    [SerializeField] Animator targetAnimator;
-
-    private void Start()
-    {
-        // Hide AutoAimImage at start
-        AutoAimImage.enabled = false;
-
-        //Hide the cursor when the game starts
-        Cursor.visible = false;
-
-        Cursor.lockState = CursorLockMode.Confined;
-
-        upgradeManager = FindObjectOfType<UpgradeManager>();
-        _gameOverManager = FindObjectOfType<GameOverManager>();
-        pauseManager = FindObjectOfType<PauseManager>();
-
-        if (upgradeManager == null || _gameOverManager == null || pauseManager == null)
-        {
-            Debug.LogError("No upgrade manager, pause manager, and or game over manager in scene");
-        }
-
-        originalSpeed = speed;
-        CurrentHealth = MaximumHealth; // Init current health to max HP
-        playerAnimator = GetComponent<Animator>();
-
-        audioSource = GetComponent<AudioSource>();
-    }
-
-    void Update()
-    {
-        // Check if a Menu is active
-        isMenuPanelActive = pauseManager.mainMenuPanel.activeSelf || _gameOverManager.gameOverUI.activeSelf || upgradeManager.upgradePanel.activeSelf;
-
-        // Set target  image position to mouse cursor position
-        TargetImage.transform.position = Input.mousePosition;
-
-        // If the cursor is visible and all menu panels are closed, hide the cursor
-        ManageCursorVisibility();
-
-        // Display the target image when no menu open and auto-aim is off. 
-        DisplayTargetImage(isMenuPanelActive, TargetImage);
-
-        // We don't want to update the player if they are dead
-        if (!isDead)
-        {
-            // We don't want to update the player if there is a menu open
-            if (!pauseManager.IsAnyMenuOpen())
-            {
-                MovePlayer();
-                RotatePlayer();
-                CheckAutoAimToggle();
             }
         }
     }

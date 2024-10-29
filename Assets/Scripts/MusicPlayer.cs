@@ -9,16 +9,19 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] AudioClip menuSong;
     [SerializeField] AudioClip[] gameMusic;
     [SerializeField] AudioClip gameOver;
-
     [SerializeField] float volumeDecrement = 0.05f;
+
 
     private int currentSceneIndex;
     private bool hasSceneChanged = false;
 
     private AudioSource audioSource;
 
+    public AudioSource AudioSource { get => audioSource;}
+
     private void Start()
     {
+
         // Record the current scene index when we start the game
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
@@ -27,7 +30,7 @@ public class MusicPlayer : MonoBehaviour
         // Load Menu Music
         LoadSong(menuSong, true);
         // Play Menu Music
-        audioSource.Play();
+        AudioSource.Play();
     }
 
     private void Update()
@@ -43,30 +46,23 @@ public class MusicPlayer : MonoBehaviour
             if (currentSceneIndex == 0)
             {
                 LoadSong(menuSong, true);
-                audioSource.Play();
+                AudioSource.Play();
             }
 
             // if we enter the game scene, lower the menu music volume, and the stop the audio player.
             if (currentSceneIndex == 1)
             {
-                StartCoroutine(LowerVolume(audioSource));
+                StartCoroutine(LowerVolume(AudioSource));
             }
         }
 
         // if we are in the game scene, check if the music has stopped and get the next song
-        if (currentSceneIndex == 1 && audioSource.isPlaying == false)
+        if (currentSceneIndex == 1 && AudioSource.isPlaying == false)
         {
-            LoadSong(GetNextSong(audioSource.clip, gameMusic), false);
-            audioSource.Play();
-            Debug.Log(audioSource.clip.name);
+            LoadSong(GetNextSong(AudioSource.clip, gameMusic), false);
+            AudioSource.Play();
+            Debug.Log(AudioSource.clip.name);
         }
-
-        // For Debugging
-        if (Input.GetKey(KeyCode.Space))
-        {
-            audioSource.Stop();
-        }
-
     }
 
     private bool RecordSceneChange(int currentScene, int activeScene)
@@ -84,10 +80,10 @@ public class MusicPlayer : MonoBehaviour
     private void LoadSong(AudioClip songTrack, bool isLooping, float songVolume = 0.3f)
     {
         // Set the audio clip to be the menu music
-        audioSource.clip = songTrack;
+        AudioSource.clip = songTrack;
         // Set the audio source loop behavior and volume
-        audioSource.loop = isLooping;
-        audioSource.volume = songVolume;
+        AudioSource.loop = isLooping;
+        AudioSource.volume = songVolume;
 
     }
 
@@ -122,6 +118,7 @@ public class MusicPlayer : MonoBehaviour
     public void PlayGameOverMusic()
     {
         LoadSong(gameOver, false);
-        audioSource.Play();
+        // Allow a slight delay for the player death sound effect to finish
+        AudioSource.PlayDelayed(1f);
     }
 }

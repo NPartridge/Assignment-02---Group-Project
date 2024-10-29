@@ -25,11 +25,21 @@ public class GameOverManager : MonoBehaviour
         gameOverUI.SetActive(false);
         
         gameTimer = FindObjectOfType<GameTimer>();
+
+        // We need to load the game from the main menu for the music player to be present in the game scene
+        musicPlayer = GameObject.FindGameObjectWithTag("MusicPlayer").GetComponent<MusicPlayer>();
+        if (musicPlayer == null)
+        {
+            Debug.Log("Music Player is NULL");
+        }
     }
 
     public void ShowGameOverUI()
     {
         gameOverUI.SetActive(true);
+
+        // Play the game over music
+        musicPlayer.PlayGameOverMusic();
 
         Player player = FindObjectOfType<Player>();
         
@@ -79,6 +89,8 @@ public class GameOverManager : MonoBehaviour
 
         // Reset time scale (this is only useful if the game has been paused)
         Time.timeScale = 1f;
+        // Turn off the game over music
+        musicPlayer.AudioSource.Stop();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Refresh the scene
     }
 }

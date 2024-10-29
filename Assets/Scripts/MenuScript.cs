@@ -1,8 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuScript : MonoBehaviour
 {
+    [SerializeField] Image background;
+    [SerializeField] Image about;
+
     public void PlayButton()
     {
         Time.timeScale = 1f;
@@ -11,7 +15,8 @@ public class MenuScript : MonoBehaviour
 
     public void AboutButton()
     {
-        Debug.Log("About");
+        background.gameObject.SetActive(false);
+        about.gameObject.SetActive(true);
     }
 
     public void QuitButton()
@@ -22,5 +27,11 @@ public class MenuScript : MonoBehaviour
     public void MainMenuButton()
     {
         SceneManager.LoadScene("Menu");
+    }
+
+    public void CloseButton()
+    {
+        about.gameObject.SetActive(false);
+        background.gameObject.SetActive(true);   
     }
 }

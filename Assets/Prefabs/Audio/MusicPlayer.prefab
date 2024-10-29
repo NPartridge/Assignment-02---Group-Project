@@ -158,7 +158,6 @@ MonoBehaviour:
   gameMusic:
   - {fileID: 8300000, guid: 2bb95c7847efca24c97fe62db9eacb8c, type: 3}
   - {fileID: 8300000, guid: 42a52d4f45753ba499a380bdae1041a1, type: 3}
-  - {fileID: 8300000, guid: abb0c754b5ff1314ca958a1ca89d7eb8, type: 3}
   - {fileID: 8300000, guid: ccc69427846e2b74ba36922887f0b907, type: 3}
   - {fileID: 8300000, guid: 30e51d007d77adc4e8047ff0d4c2322e, type: 3}
   - {fileID: 8300000, guid: 2ed386cc52d340a418182d83f192e1d5, type: 3}
